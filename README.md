@@ -1,2 +1,1 @@
-# Cocktail-Codex
-Cocktail Codex Webapp2
+Coffee Manual 
