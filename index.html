@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Art of the Brew | Complete Barista Training</title>
+    <title>The Art of the Brew | BSR Barista Training</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -37,7 +37,7 @@
 
         header {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 20px;
             border: 3px solid var(--brown);
             border-radius: 15px;
             margin-bottom: 40px;
@@ -151,28 +151,6 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
-            cursor: pointer;
-        }
-
-        .coffee-img::after {
-            content: "Click to Upload Coffee Image";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(0,0,0,0.1);
-            color: var(--brown);
-            font-weight: bold;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .coffee-img.has-image::after {
-            opacity: 0;
         }
 
         .coffee-content {
@@ -281,11 +259,6 @@
             border-radius: 0 8px 8px 0;
         }
 
-        .coffee-card.drag-over {
-            border-color: var(--dark-pink);
-            box-shadow: 0 0 10px var(--dark-pink);
-        }
-
         .warning-box {
             background-color: rgba(212, 138, 148, 0.2);
             border-left: 4px solid var(--dark-pink);
@@ -356,24 +329,42 @@
             margin-top: 0;
         }
 
-        .file-input {
-            display: none;
-        }
-
         .coffee-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        
+        /* NEW STYLES FOR YOUTUBE VIDEO */
+        .video-container {
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .youtube-video {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            border: 2px solid var(--brown);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .video-caption {
+            margin-top: 10px;
+            font-style: italic;
+            color: var(--brown);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>The Art of the Brew</h1>
-            <p class="tagline"> BSR Barista Training Manual</p>
+            <h1>🐑</h1>
+            <!-- CHANGED: Updated tagline to "BSR Barista Training Manual" -->
+            <p class="tagline">BSR Barista Training Manual</p>
             <h2>Welcome, Apprentice Barista!</h2>
-            <p>This <strong>6-8 session course</strong> will transform you into a qualified coffee artist. We'll blend theory, practical demos, and hands-on practice to master the craft of boutique coffee.</p>
+            <p>This <strong> course</strong> will transform you into a qualified coffee artist. We'll blend theory, practical demos, and hands-on practice to master the craft of boutique coffee.</p>
         </header>
 
         <section class="section" style="animation-delay: 0.2s;">
@@ -465,6 +456,12 @@
         <section class="section" style="animation-delay: 0.5s;">
             <h2>Mastering Milk Textures</h2>
             
+            <!-- ADDED: YouTube Video Container -->
+            <div class="video-container">
+                <iframe class="youtube-video" src="https://www.youtube.com/embed/b2DRfAPB0QA" title="Milk Texturing Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <p class="video-caption">Watch this demonstration of proper milk texturing techniques</p>
+            </div>
+            
             <div class="milk-technique">
                 <h4>CREAMY MILK ...LIKE SILK (Recommended)</h4>
                 <p><span class="step-badge">1</span> Pour fresh, cold milk (4°C) into the jug.</p>
@@ -492,15 +489,16 @@
 
         <section class="section" style="animation-delay: 0.6s;">
             <h2>The Complete Coffee Menu</h2>
-            <p>Click on any coffee image area to upload your own images!</p>
+            <p>Explore our complete coffee offerings with visual examples.</p>
             <div class="instructions">
                 <p><strong>Note:</strong> All measurements and instructions may vary based on different coffee grinds, blends, machines and pressure levels.</p>
             </div>
             
             <div class="coffee-gallery">
+                <!-- Coffee cards with manual images -->
                 <div class="coffee-card" data-coffee="latte">
                     <div class="coffee-type-badge">Latte</div>
-                    <div class="coffee-img" id="latte-img"></div>
+                    <div class="coffee-img" id="latte-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2Fb71677a1-2f4b-4287-b62f-8da021abea27%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T195303Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D3e8e9696314506b8688de130929e6e089a717244a6afe27470d0ebdcf490b5dd&sign=pxBs8kOFsHGZonV7K9Gfj4Pon66YnkW872XsgU6BHuk)"></div>
                     <div class="coffee-content">
                         <h3>Latte</h3>
                         <div class="coffee-details">
@@ -515,7 +513,7 @@
 
                 <div class="coffee-card" data-coffee="cappuccino">
                     <div class="coffee-type-badge">Cappuccino</div>
-                    <div class="coffee-img" id="cappuccino-img"></div>
+                    <div class="coffee-img" id="cappuccino-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F079998a4-c4f0-475d-8323-58bc054bb710%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T195438Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D7cc48abaf2c0cbebebdb02cc910da937bdc0b71b57b2b1b4cf0b2dd5d73f9a15&sign=0q6TW4fhpGWvYcxjX2NPNul9Cbbza6rXcuUwO64sW7g)"></div>
                     <div class="coffee-content">
                         <h3>Cappuccino</h3>
                         <div class="coffee-details">
@@ -530,7 +528,7 @@
 
                 <div class="coffee-card" data-coffee="flat-white">
                     <div class="coffee-type-badge">Flat White</div>
-                    <div class="coffee-img" id="flat-white-img"></div>
+                    <div class="coffee-img" id="flat-white-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2Fc17a9f3f-41e6-4a9d-9205-a776160cef2b%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T201348Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D487dd2e7c9f076981857842952afd835dd86c8366aaaf6842d07e6ecefc38b12&sign=CTex7h3CGB1R5Avr1RTH39YqAaLCg756i20Qiw4o81s)"></div>
                     <div class="coffee-content">
                         <h3>Flat White</h3>
                         <div class="coffee-details">
@@ -545,7 +543,7 @@
 
                 <div class="coffee-card" data-coffee="espresso">
                     <div class="coffee-type-badge">Espresso</div>
-                    <div class="coffee-img" id="espresso-img"></div>
+                    <div class="coffee-img" id="espresso-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F7028bf79-a553-45d6-86bb-8358b7d05774%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T195851Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D01f0bf96ae0db75b5c2843a59ee91eec8666473222f96fdea4c44c69e64cdfa1&sign=3cvY9qol6hVbxEH3sJaVdqYLFxdJJCf63aCh-FC5ggg)"></div>
                     <div class="coffee-content">
                         <h3>Espresso / Short Black</h3>
                         <div class="coffee-details">
@@ -559,7 +557,7 @@
 
                 <div class="coffee-card" data-coffee="long-black">
                     <div class="coffee-type-badge">Long Black</div>
-                    <div class="coffee-img" id="long-black-img"></div>
+                    <div class="coffee-img" id="long-black-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F1119c8e2-4d09-442c-8280-cf5dcdce06c5%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T195941Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D45c2200ac15fdec3d7ca606196bf9088d382ba1a18f60ae145ad8309554b2ed1&sign=QyPVcrpTkRNolsx11o972TN4AswZzzJA95WeCqncAuw)"></div>
                     <div class="coffee-content">
                         <h3>Long Espresso / Long Black / Americano / Regular</h3>
                         <div class="coffee-details">
@@ -573,7 +571,7 @@
 
                 <div class="coffee-card" data-coffee="macciato">
                     <div class="coffee-type-badge">Macciato</div>
-                    <div class="coffee-img" id="macciato-img"></div>
+                    <div class="coffee-img" id="macciato-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F58facd44-3733-4353-b740-1a3c24eed4d6%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200100Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3Dceeaaab92c8cd88cdf340a916b22fdadf472dafbd7d174fc473b6eab5939e9bb&sign=eRwEcL-nbM5_LraO3f_qjpeXWixaOS90NxG36slrDQs)"></div>
                     <div class="coffee-content">
                         <h3>Short Macciato</h3>
                         <div class="coffee-details">
@@ -586,7 +584,7 @@
 
                 <div class="coffee-card" data-coffee="ristretto">
                     <div class="coffee-type-badge">Ristretto</div>
-                    <div class="coffee-img" id="ristretto-img"></div>
+                    <div class="coffee-img" id="ristretto-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2Fc8e81019-5b90-4c10-bf4b-466d534bb9e1%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200319Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D14442b78bcc844dbd9f22c85c963d5d8a72f1cdc5a1b886d37fb3918060d98d7&sign=3BWoM22RL3bcQHbTpYewnXqhE1qvfX_yP8HcbqVZ0Po)"></div>
                     <div class="coffee-content">
                         <h3>Ristretto</h3>
                         <div class="coffee-details">
@@ -599,7 +597,7 @@
 
                 <div class="coffee-card" data-coffee="piccolo">
                     <div class="coffee-type-badge">Piccolo</div>
-                    <div class="coffee-img" id="piccolo-img"></div>
+                    <div class="coffee-img" id="piccolo-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2Fcf9904dc-c0b5-4aba-ace6-f1a72cecf02b%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200359Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D373558bd95ae2ef902b1b8f58c85009cf0791691af0e6ad11c01ce61149c3db1&sign=k6cr5Qk3vbLTO8XG_bYmQP5EyXpdgNOfW8gprKo1F_s)"></div>
                     <div class="coffee-content">
                         <h3>Piccolo</h3>
                         <div class="coffee-details">
@@ -612,7 +610,7 @@
 
                 <div class="coffee-card" data-coffee="mocha">
                     <div class="coffee-type-badge">Mocha</div>
-                    <div class="coffee-img" id="mocha-img"></div>
+                    <div class="coffee-img" id="mocha-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F8f081a9c-34d2-422c-91dd-ffbb34c8daf6%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200832Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D50deda076ba5761764bcc828e9dacf2fb29db775150ecf57a7261ebc7744e9b7&sign=yaApzq0xZwEOPqAGpeBK_e_p92scK5QKVEx_ZDzsD6E)"></div>
                     <div class="coffee-content">
                         <h3>Mocha</h3>
                         <div class="coffee-details">
@@ -627,7 +625,7 @@
 
                 <div class="coffee-card" data-coffee="vienna">
                     <div class="coffee-type-badge">Vienna</div>
-                    <div class="coffee-img" id="vienna-img"></div>
+                    <div class="coffee-img" id="vienna-img" style="background-image: url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Vienna</h3>
                         <div class="coffee-details">
@@ -641,7 +639,7 @@
 
                 <div class="coffee-card" data-coffee="affogato">
                     <div class="coffee-type-badge">Affogato</div>
-                    <div class="coffee-img" id="affogato-img"></div>
+                    <div class="coffee-img" id="affogato-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F92dc1b39-c47e-4e12-ad61-5c2aca865575%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200518Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D54200da2f802dbbddeb4a2718cfa204f8bc83d328239dd7f59370825ccca219e&sign=2o6qNQm8k-ha-0P3zRcSBj5oTZipeUzSIBWpz6dmpM8)"></div>
                     <div class="coffee-content">
                         <h3>Affogato</h3>
                         <div class="coffee-details">
@@ -655,7 +653,7 @@
 
                 <div class="coffee-card" data-coffee="hot-chocolate">
                     <div class="coffee-type-badge">Hot Chocolate</div>
-                    <div class="coffee-img" id="hot-chocolate-img"></div>
+                    <div class="coffee-img" id="hot-chocolate-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F29769a33-36b0-4bdf-9a0a-4456c616754e%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T201051Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D54e33401130c19579f7ecb35a54a236f3e7f4bec47b2229f6372083dcd117567&sign=DEY869IJXS48rzhCkMFrTm1y6pZpq8eyXmjY1IFeMg8)"></div>
                     <div class="coffee-content">
                         <h3>Hot Chocolate</h3>
                         <div class="coffee-details">
@@ -691,92 +689,5 @@
             </div>
         </footer>
     </div>
-
-    <input type="file" id="image-input" class="file-input" accept="image/*">
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('image-input');
-            let currentImageContainer = null;
-
-            // Set up click event for all coffee image containers
-            const coffeeImages = document.querySelectorAll('.coffee-img');
-            
-            coffeeImages.forEach(container => {
-                container.addEventListener('click', function() {
-                    currentImageContainer = this;
-                    fileInput.click();
-                });
-
-                // Drag and drop functionality
-                container.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.classList.add('drag-over');
-                });
-
-                container.addEventListener('dragleave', function() {
-                    this.classList.remove('drag-over');
-                });
-
-                container.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    this.classList.remove('drag-over');
-                    const files = e.dataTransfer.files;
-                    if (files.length > 0) {
-                        handleImageUpload(files[0], this);
-                    }
-                });
-            });
-
-            // Handle file input change
-            fileInput.addEventListener('change', function(e) {
-                if (e.target.files.length > 0 && currentImageContainer) {
-                    handleImageUpload(e.target.files[0], currentImageContainer);
-                    currentImageContainer = null;
-                }
-            });
-
-            function handleImageUpload(file, container) {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        container.innerHTML = '';
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.alt = 'Coffee Image';
-                        container.appendChild(img);
-                        container.classList.add('has-image');
-                        
-                        // Save to localStorage
-                        const coffeeType = container.closest('.coffee-card').dataset.coffee;
-                        localStorage.setItem(`coffee-image-${coffeeType}`, e.target.result);
-                    }
-                    
-                    reader.readAsDataURL(file);
-                }
-            }
-
-            // Load saved images from localStorage on page load
-            function loadSavedImages() {
-                coffeeImages.forEach(container => {
-                    const coffeeType = container.closest('.coffee-card').dataset.coffee;
-                    const savedImage = localStorage.getItem(`coffee-image-${coffeeType}`);
-                    
-                    if (savedImage) {
-                        container.innerHTML = '';
-                        const img = document.createElement('img');
-                        img.src = savedImage;
-                        img.alt = 'Coffee Image';
-                        container.appendChild(img);
-                        container.classList.add('has-image');
-                    }
-                });
-            }
-
-            // Load saved images when page loads
-            loadSavedImages();
-        });
-    </script>
 </body>
 </html>
