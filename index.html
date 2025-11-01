@@ -2,2128 +2,781 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cocktail Manual</title>
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍸</text></svg>">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍸</text></svg>">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Cocktail Manual">
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Art of the Brew | BSR Barista Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --pink: #E8B4BC;
+            --dark-pink: #D48A94;
+            --brown: #8B6B4E;
+            --light-blue: #A8DADC;
+            --olive-green: #8A9B68;
+            --dark-green: #556B2F;
+            --cream: #F5F1E6;
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0A0A0A;
-            color: white;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -webkit-text-size-adjust: 100%;
-            font-size: 16px;
-        }
-        
-        .app {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: var(--cream);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--cream) 0%, #e6dfd1 100%);
             min-height: 100vh;
-            background: #0A0A0A;
-            position: relative;
         }
-        
-        /* Header */
-        .header {
-            background: #1A1A1A;
-            padding: 1rem;
-            border-bottom: 1px solid #333;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .menu-button {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 0.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            width: 30px;
-            height: 30px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .menu-line {
-            width: 20px;
-            height: 2px;
-            background: white;
-            transition: all 0.3s ease;
-        }
-        
-        .menu-button.active .menu-line:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-        
-        .menu-button.active .menu-line:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .menu-button.active .menu-line:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
-        
-        .nav-user {
-            color: #FFB366;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .logout-btn {
-            background: transparent;
-            border: 1px solid #FFB366;
-            color: #FFB366;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            white-space: nowrap;
-        }
-        
-        .logout-btn:hover {
-            background: #FFB366;
-            color: #0A0A0A;
-        }
-        
-        /* Side Menu */
-        .side-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .side-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background: #1A1A1A;
-            border-right: 1px solid #333;
-            z-index: 1000;
-            transition: left 0.3s ease;
-            overflow-y: auto;
-            padding: 2rem 1rem;
-        }
-        
-        .side-menu.active {
-            left: 0;
-        }
-        
-        .side-menu-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #333;
-        }
-        
-        .side-menu-logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #FFB366, #FF8C42);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-        
-        .side-menu-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #FFB366;
-        }
-        
-        .side-menu-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        .side-menu-button {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .side-menu-button:hover {
-            background: #444;
-            transform: translateX(5px);
-        }
-        
-        .side-menu-button.active {
-            background: #FFB366;
-            color: #0A0A0A;
-        }
-        
-        .side-menu-button.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .side-menu-button.disabled:hover {
-            background: #333;
-            transform: none;
-        }
-        
-        /* Main Content */
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem;
         }
-        
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .page-title {
-            font-size: 1.8rem;
-            color: #FFB366;
-        }
-        
-        /* Search and Filters */
-        .search-section {
-            background: #1A1A1A;
-            padding: 1.25rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            border: 1px solid #333;
-        }
-        
-        .search-box {
-            width: 100%;
-            padding: 0.75rem;
-            background: #333;
-            border: 1px solid #555;
-            border-radius: 6px;
-            color: white;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-        
-        .filters {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-        
-        .filter-select {
-            padding: 0.75rem;
-            background: #333;
-            border: 1px solid #555;
-            border-radius: 6px;
-            color: white;
-            flex: 1;
-            min-width: 140px;
-            font-size: 0.9rem;
-        }
-        
-        /* Recipe Grid */
-        .recipes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .recipe-card {
-            background: #1A1A1A;
-            border-radius: 10px;
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border: 3px solid var(--brown);
+            border-radius: 15px;
+            margin-bottom: 40px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
             overflow: hidden;
-            border: 1px solid #333;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            position: relative;
         }
-        
-        .recipe-card:hover {
-            transform: translateY(-2px);
-            border-color: #FFB366;
-        }
-        
-        .recipe-image {
-            width: 100%;
-            height: 160px;
-            background: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-        
-        .recipe-info {
-            padding: 0.75rem;
-        }
-        
-        .recipe-name {
-            font-weight: bold;
-            margin-bottom: 0.25rem;
-            font-size: 0.9rem;
-            line-height: 1.2;
-        }
-        
-        .recipe-spirit {
-            color: #FFB366;
-            font-size: 0.8rem;
-        }
-        
-        /* Alphabet Sections */
-        .alphabet-section {
-            margin-bottom: 2rem;
-        }
-        
-        .letter-header {
-            font-size: 1.5rem;
-            color: #FFB366;
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #FFB366;
-        }
-        
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 1.5rem 1rem;
-            margin-top: 2rem;
-            border-top: 1px solid #333;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .footer a {
-            color: #FFB366;
-            text-decoration: none;
-        }
-        
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Form Styles */
-        .form {
-            background: #1A1A1A;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid #333;
-            max-width: 100%;
-            margin: 0 auto;
-        }
-        
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #FFB366;
-            font-size: 0.9rem;
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 0.75rem;
-            background: #333;
-            border: 1px solid #555;
-            border-radius: 6px;
-            color: white;
-            font-size: 16px;
-        }
-        
-        .form-textarea {
-            width: 100%;
-            padding: 0.75rem;
-            background: #333;
-            border: 1px solid #555;
-            border-radius: 6px;
-            color: white;
-            min-height: 100px;
-            resize: vertical;
-            font-size: 16px;
-            font-family: inherit;
-        }
-        
-        .button {
-            background: #FFB366;
-            color: #0A0A0A;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-            font-size: 1rem;
-        }
-        
-        .button:hover {
-            background: #FF8C42;
-        }
-        
-        .button-secondary {
-            background: #333;
-            color: white;
-        }
-        
-        .button-secondary:hover {
-            background: #444;
-        }
-        
-        .buttons-row {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .buttons-row .button {
-            flex: 1;
-            min-width: 120px;
-        }
-        
-        /* Image Upload */
-        .image-upload {
-            border: 2px dashed #555;
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-        
-        .image-upload:hover {
-            border-color: #FFB366;
-        }
-        
-        .image-preview {
-            max-width: 100%;
-            max-height: 250px;
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
-        
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #666;
-        }
-        
-        /* Scale Modal */
-        .modal-overlay {
-            position: fixed;
+
+        header::before {
+            content: "";
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            height: 8px;
+            background: linear-gradient(90deg, var(--pink), var(--light-blue), var(--olive-green));
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--dark-pink);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            color: var(--brown);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: white;
+            border: 2px solid var(--brown);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .term-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .term-card {
+            background: var(--light-blue);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid var(--dark-pink);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .term-card h4 {
+            margin-top: 0;
+            color: var(--brown);
+        }
+
+        .coffee-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .coffee-card {
+            border: 2px solid var(--brown);
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .coffee-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .coffee-img {
+            height: 180px;
+            background-color: var(--pink);
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid var(--brown);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            padding: 1rem;
-        }
-        
-        .modal {
-            background: #1A1A1A;
-            border-radius: 10px;
-            padding: 1.5rem;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid #333;
-        }
-        
-        /* Recipe View */
-        .recipe-view {
-            background: #1A1A1A;
-            border-radius: 10px;
-            padding: 1.5rem;
-            border: 1px solid #333;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
-        
-        .recipe-background {
+
+        .coffee-img::after {
+            content: "Click to Upload Coffee Image";
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-size: cover;
-            background-position: center;
-            opacity: 0.1;
-            z-index: 0;
-            filter: brightness(0.3) contrast(1.2);
-        }
-        
-        .recipe-content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .recipe-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .recipe-title {
-            font-size: 1.8rem;
-            color: #FFB366;
-            margin-bottom: 0.5rem;
-        }
-        
-        .recipe-meta {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
-        
-        .meta-item {
-            background: #333;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-        
-        .recipe-image-large {
-            width: 100%;
-            max-width: 300px;
-            height: 300px;
-            background: #333;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .recipe-details {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        @media (min-width: 768px) {
-            .recipe-details {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        
-        .ingredients-list {
-            list-style: none;
-        }
-        
-        .ingredient-item {
-            padding: 0.75rem;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .ingredient-item:last-child {
-            border-bottom: none;
-        }
-        
-        .instructions {
-            white-space: pre-line;
-            line-height: 1.6;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .action-button {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-        }
-        
-        .action-button:hover {
-            background: #444;
-        }
-        
-        .action-button.scale {
-            background: #FFB366;
-            color: #0A0A0A;
-        }
-        
-        .action-button.scale:hover {
-            background: #FF8C42;
-        }
-        
-        .action-button.edit {
-            background: #4CAF50;
-        }
-        
-        .action-button.edit:hover {
-            background: #45a049;
-        }
-        
-        .action-button.delete {
-            background: #f44336;
-        }
-        
-        .action-button.delete:hover {
-            background: #d32f2f;
-        }
-        
-        /* Settings */
-        .settings-section {
-            background: #1A1A1A;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid #333;
-            margin-bottom: 1.5rem;
-        }
-        
-        .settings-title {
-            font-size: 1.3rem;
-            color: #FFB366;
-            margin-bottom: 1rem;
-        }
-        
-        .settings-list {
-            list-style: none;
-            min-height: 60px;
-        }
-        
-        .settings-item {
-            padding: 1rem;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: move;
-            background: #1A1A1A;
-            transition: background 0.2s;
-            user-select: none;
-        }
-        
-        .settings-item:hover {
-            background: #222;
-        }
-        
-        .settings-item.dragging {
-            opacity: 0.5;
-            background: #333;
-        }
-        
-        .settings-item:last-child {
-            border-bottom: none;
-        }
-        
-        .settings-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .icon-button {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 0.5rem;
-            border-radius: 4px;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
-            font-size: 1rem;
+            background-color: rgba(0,0,0,0.1);
+            color: var(--brown);
+            font-weight: bold;
+            opacity: 0.7;
+            transition: opacity 0.3s;
         }
-        
-        .icon-button:hover {
-            background: #444;
+
+        .coffee-img.has-image::after {
+            opacity: 0;
         }
-        
-        .icon-button.delete {
-            background: #f44336;
+
+        .coffee-content {
+            padding: 20px;
         }
-        
-        .icon-button.delete:hover {
-            background: #d32f2f;
+
+        .coffee-content h3 {
+            color: var(--dark-pink);
+            border-bottom: 1px dashed var(--brown);
+            padding-bottom: 8px;
+            margin-top: 0;
         }
-        
-        /* Sync Status */
-        .sync-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 0.5rem;
-        }
-        
-        .sync-indicator {
-            width: 8px;
-            height: 8px;
+
+        .step-badge {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background-color: var(--dark-pink);
+            color: white;
             border-radius: 50%;
-            background: #666;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+            margin-right: 10px;
         }
-        
-        .sync-indicator.synced {
-            background: #4CAF50;
+
+        .secrets-list {
+            list-style: none;
+            padding: 0;
         }
-        
-        .sync-indicator.syncing {
-            background: #FFB366;
-            animation: pulse 1.5s infinite;
+
+        .secrets-list li {
+            background: var(--light-blue);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid var(--olive-green);
+            font-weight: bold;
         }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+
+        .image-drop-zone {
+            border: 2px dashed var(--brown);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            background-color: rgba(168, 218, 220, 0.2);
+            transition: all 0.3s;
         }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                padding: 0.75rem;
-                height: 60px;
-            }
-            
-            .container {
-                padding: 0.75rem;
-            }
-            
-            .page-title {
-                font-size: 1.5rem;
-            }
-            
-            .recipes-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                gap: 0.5rem;
-            }
-            
-            .recipe-image {
-                height: 140px;
-            }
-            
-            .filters {
-                flex-direction: column;
-            }
-            
-            .filter-select {
-                min-width: auto;
-            }
-            
-            .side-menu {
-                width: 85%;
-                max-width: 280px;
-            }
-            
-            .form {
-                padding: 1rem;
-            }
-            
-            .buttons-row {
-                flex-direction: column;
-            }
-            
-            .buttons-row .button {
-                width: 100%;
-            }
-            
-            .nav-user {
-                font-size: 0.8rem;
-            }
-            
-            .logout-btn {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.7rem;
-            }
-            
-            .recipe-header {
-                flex-direction: column;
-            }
-            
-            .action-buttons {
-                width: 100%;
-            }
-            
-            .action-buttons button {
-                flex: 1;
-            }
-            
-            .modal {
-                margin: 1rem;
-                padding: 1rem;
-            }
-            
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+
+        .image-drop-zone.highlight {
+            background-color: rgba(139, 107, 78, 0.2);
+            border-color: var(--dark-pink);
+        }
+
+        .image-drop-zone p {
+            margin: 0;
+            color: var(--brown);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background-color: var(--dark-green);
+            color: white;
+            border-radius: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .copyright {
+            margin-top: 15px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .copyright a {
+            color: var(--light-blue);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .copyright a:hover {
+            color: var(--pink);
+            text-decoration: underline;
+        }
+
+        .coffee-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--dark-pink);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .instructions {
+            background-color: rgba(245, 241, 230, 0.7);
+            border-left: 4px solid var(--olive-green);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .coffee-card.drag-over {
+            border-color: var(--dark-pink);
+            box-shadow: 0 0 10px var(--dark-pink);
+        }
+
+        .warning-box {
+            background-color: rgba(212, 138, 148, 0.2);
+            border-left: 4px solid var(--dark-pink);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-box {
+            background-color: rgba(138, 155, 104, 0.2);
+            border-left: 4px solid var(--olive-green);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .coffee-details {
+            margin-top: 15px;
+        }
+
+        .coffee-details p {
+            margin: 8px 0;
+        }
+
+        .coffee-details strong {
+            color: var(--brown);
+        }
+
+        .nav-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--brown);
+            margin-bottom: 20px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: var(--light-blue);
+            border: 1px solid var(--brown);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            margin-right: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-tab.active {
+            background: var(--dark-pink);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .milk-technique {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(168, 218, 220, 0.2);
+            border-radius: 8px;
+        }
+
+        .milk-technique h4 {
+            color: var(--brown);
+            margin-top: 0;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .coffee-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="container">
+        <header>
+            <h1>The Art of the Brew</h1>
+            <p class="tagline">BSR Barista Training Manual</p>
+            <h2>Welcome, Apprentice Barista!</h2>
+            <p>This <strong>6-8 session course</strong> will transform you into a qualified coffee artist. We'll blend theory, practical demos, and hands-on practice to master the craft of boutique coffee.</p>
+        </header>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-        
-        // Firebase configuration
-       const firebaseConfig = {
-  apiKey: "AIzaSyDmq1YOoF_WqPwS2zRdjEfZGPR5UpL1qig",
-  authDomain: "studio-2503765299-c68ad.firebaseapp.com",
-  projectId: "studio-2503765299-c68ad",
-  storageBucket: "studio-2503765299-c68ad.firebasestorage.app",
-  messagingSenderId: "744155980927",
-  appId: "1:744155980927:web:8bbc7eb044fc491f370b4a"
-};
+        <section class="section" style="animation-delay: 0.2s;">
+            <h2>Coffee Lingo 101</h2>
+            <p>Let's decode the language of the café.</p>
+            <div class="term-grid">
+                <div class="term-card">
+                    <h4>Coffee Grind</h4>
+                    <p>The coffee powder used for brewing.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Espresso / Shot / Base</h4>
+                    <p>A small amount of concentrated coffee used as the base for all coffee orders.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Crema</h4>
+                    <p>The thin, caramel-colored layer that forms on top of every shot of espresso. Also known as "coffee oil".</p>
+                </div>
+                <div class="term-card">
+                    <h4>Tamp</h4>
+                    <p>To push the coffee down in the porta-filter, compacting it so it's level and even.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Tampa</h4>
+                    <p>The little black or stainless steel instrument used to press down the coffee in the porta-filter.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Group Handle (Coffee Gun)</h4>
+                    <p>The instrument that holds the porta-filter, held when putting coffee in the machine.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Group Head</h4>
+                    <p>The part of the machine the group handle fits into.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Element</h4>
+                    <p>A hot screen/plate inside the group head that filters the coffee grind and turns it into liquid.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Porta-Filter</h4>
+                    <p>A round silver cup that clips inside the group head.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Extraction</h4>
+                    <p>The process that turns coffee grind into coffee liquid.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Steam Wand</h4>
+                    <p>The long silver stem that comes out from the side of the machine, through which steam travels when heating milk.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Nozzle</h4>
+                    <p>The end tip on the steam wand with 3 or 4 holes where steam comes out.</p>
+                </div>
+                <div class="term-card">
+                    <h4>Dissipates</h4>
+                    <p>To disappear or fade away (referring to crema that doesn't form properly).</p>
+                </div>
+            </div>
+        </section>
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(app);
-        const auth = firebase.auth(app);
-        
-        // Authentication configuration
-        const ADMIN_CREDENTIALS = {
-            username: 'suraj',
-            password: 'cocktail123'
-        };
-        
-        // Load data from localStorage or use defaults
-        const loadFromStorage = (key, defaultValue) => {
-            try {
-                const item = localStorage.getItem(key);
-                return item ? JSON.parse(item) : defaultValue;
-            } catch {
-                return defaultValue;
-            }
-        };
-        
-        const saveToStorage = (key, value) => {
-            try {
-                localStorage.setItem(key, JSON.stringify(value));
-                return true;
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
-                return false;
-            }
-        };
-        
-        // Data management functions
-        const getRecipes = () => {
-            return loadFromStorage('cocktailRecipes', [
-                {
-                    id: '1',
-                    name: 'Aviation',
-                    spirit_type: 'Gin',
-                    venue: 'Main Bar',
-                    glass_type: 'Coupe',
-                    abv: 28,
-                    pour_cost: 4.25,
-                    image_url: '',
-                    ingredients: [
-                        { name: 'Gin', amount: 45, unit: 'ml' },
-                        { name: 'Maraschino Liqueur', amount: 15, unit: 'ml' },
-                        { name: 'Crème de Violette', amount: 15, unit: 'ml' },
-                        { name: 'Lemon Juice', amount: 30, unit: 'ml' }
-                    ],
-                    instructions: 'Shake all ingredients with ice. Strain into chilled coupe glass. Garnish with a cherry.',
-                    notes: 'Classic pre-prohibition cocktail with a beautiful purple hue.',
-                    createdBy: 'system',
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                },
-                {
-                    id: '2',
-                    name: 'Margarita',
-                    spirit_type: 'Tequila',
-                    venue: 'Pool Bar',
-                    glass_type: 'Margarita',
-                    abv: 25,
-                    pour_cost: 3.75,
-                    image_url: '',
-                    ingredients: [
-                        { name: 'Tequila', amount: 50, unit: 'ml' },
-                        { name: 'Lime Juice', amount: 25, unit: 'ml' },
-                        { name: 'Triple Sec', amount: 20, unit: 'ml' }
-                    ],
-                    instructions: 'Shake all ingredients with ice. Strain into salt-rimmed glass filled with ice.',
-                    notes: 'Classic tequila cocktail perfect for summer.',
-                    createdBy: 'system',
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                }
-            ]);
-        };
-        
-        const saveRecipes = (recipes) => {
-            return saveToStorage('cocktailRecipes', recipes);
-        };
-        
-        const getSyrups = () => {
-            return loadFromStorage('cocktailSyrups', []);
-        };
-        
-        const getSettings = () => {
-            return loadFromStorage('cocktailSettings', {
-                spirit_types: ['Gin', 'Vodka', 'Rum', 'Tequila', 'Whiskey', 'Brandy'],
-                glass_types: ['Coupe', 'Martini', 'Highball', 'Old Fashioned', 'Collins', 'Margarita'],
-                venues: ['Main Bar', 'Pool Bar', 'Restaurant', 'Private Event']
-            });
-        };
-        
-        const saveSettings = (settings) => {
-            return saveToStorage('cocktailSettings', settings);
-        };
+        <section class="section" style="animation-delay: 0.3s;">
+            <h2>The 3 Golden Secrets to Perfect Coffee</h2>
+            <ol class="secrets-list">
+                <li>1. CREMA / COFFEE OIL - The essential layer that provides flavor and body</li>
+                <li>2. CREAMY, HOT MILK LIKE SILK - Perfectly textured milk for superior coffee drinks</li>
+                <li>3. MAKING WHAT THE CUSTOMER ORDERS - Whether weak, strong, boiled or lukewarm, making the customer happy keeps them coming back!</li>
+            </ol>
+        </section>
 
-        // Utility function to convert image to base64
-        const convertImageToBase64 = (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        };
+        <section class="section" style="animation-delay: 0.4s;">
+            <h2>Crafting the Perfect Espresso Shot</h2>
+            <p><span class="step-badge">1</span> <strong>Prep & Pre-heat:</strong> Always have appropriate cups (latte, cappuccino, long black) prepared and pre-heated with hot water before making the base/shot.</p>
+            <p><span class="step-badge">2</span> <strong>Dose:</strong> Take the group handle and fill the porta-filter with the measured amount of coffee grind: single shot (1 click), double shot (2 clicks).</p>
+            <p><span class="step-badge">3</span> <strong>Tamp:</strong> Press down the coffee using the tampa. DO NOT tamp too hard or tight, just enough till it's at required level so the coffee is balanced and evened out. Wipe away any excess grind.</p>
+            <p><span class="step-badge">4</span> <strong>Brew IMMEDIATELY:</strong> Place in machine head and press the required button immediately! The coffee WILL BURN if button is NOT pressed as soon as the coffee touches the hot element.</p>
+            <p><span class="step-badge">5</span> <strong>Extraction Time:</strong> The extraction should take between 25-30 seconds (varies by machine).</p>
+            <p><span class="step-badge">6</span> <strong>Grind Consistency:</strong> If shot takes 10-15 seconds, grind is too coarse. If 40-50 seconds, too fine. Espresso grind should have a "sand-like" texture.</p>
+            <p><span class="step-badge">7</span> <strong>Shot Volume:</strong> A shot of espresso should be 40-50ml (varies by grind/machine).</p>
+            <p><span class="step-badge">8</span> <strong>Check the Crema:</strong> KEY TO BEAUTIFUL COFFEE = THE CREMA. It should be 3-4ml thick with a smooth, caramel color.</p>
+            <div class="warning-box">
+                <p><strong>Warning:</strong> If streaks or stripes appear of a darker orange color, the coffee could be bitter. Swirl the shot to blend dark stripes with caramel color. If crema dissipates, throw it away and make a fresh shot!</p>
+            </div>
+            <div class="tip-box">
+                <p><strong>Pro Tip:</strong> For weak coffee, make the base as shown then pour half out carefully without losing crema. For strong coffee, use a double shot but stop manually before programmed time.</p>
+            </div>
+        </section>
 
-        // Firebase Data Management
-        const syncRecipesWithFirebase = async (userId, recipes) => {
-            try {
-                // Save recipes to Firebase
-                await db.collection('users').doc(userId).set({
-                    recipes: recipes,
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-                
-                return true;
-            } catch (error) {
-                console.error('Error syncing with Firebase:', error);
-                return false;
-            }
-        };
-
-        const loadRecipesFromFirebase = async (userId) => {
-            try {
-                const doc = await db.collection('users').doc(userId).get();
-                if (doc.exists) {
-                    return doc.data().recipes || [];
-                }
-                return [];
-            } catch (error) {
-                console.error('Error loading from Firebase:', error);
-                return null;
-            }
-        };
-
-        // Authentication Hook
-        function useAuth() {
-            const [user, setUser] = useState(null);
-            const [firebaseUser, setFirebaseUser] = useState(null);
+        <section class="section" style="animation-delay: 0.5s;">
+            <h2>Mastering Milk Textures</h2>
             
-            useEffect(() => {
-                // Check if user is logged in from localStorage
-                const savedUser = localStorage.getItem('cocktailAppUser');
-                if (savedUser) {
-                    setUser(JSON.parse(savedUser));
-                }
-                
-                // Set up Firebase auth state listener
-                const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
-                    setFirebaseUser(firebaseUser);
+            <div class="milk-technique">
+                <h4>CREAMY MILK ...LIKE SILK (Recommended)</h4>
+                <p><span class="step-badge">1</span> Pour fresh, cold milk (4°C) into the jug.</p>
+                <p><span class="step-badge">2</span> Place the nozzle of the steam wand in the milk to the bottom and turn steam on.</p>
+                <p><span class="step-badge">3</span> Lower the jug until the nozzle is just below the surface = KISSING THE MILK.</p>
+                <p><span class="step-badge">4</span> Keep nozzle just below surface AT ALL TIMES, moving the wand around slightly.</p>
+                <p><span class="step-badge">5</span> As milk heats and rises, continue lowering the jug and adjust pressure to prevent boiling.</p>
+                <p><strong>Result:</strong> Creamy, silky, thick texture perfect for lattes, cappuccinos, flat whites, etc.</p>
+            </div>
+
+            <div class="milk-technique">
+                <h4>STEWED / STEAMED MILK (Not Recommended)</h4>
+                <p>Nozzle placed at bottom of jug with high pressure, swirling rapidly. Results in thin, hot milk that changes coffee flavor.</p>
+            </div>
+
+            <div class="milk-technique">
+                <h4>FLUFFY / FROTHY MILK (Not Recommended)</h4>
+                <p>Nozzle brought to surface and out of milk to create big air bubbles. Results in lukewarm, thin milk with fluffy froth on top.</p>
+            </div>
+
+            <div class="warning-box">
+                <p><strong>Important:</strong> NEVER heat milk twice. NEVER use burnt milk. ALWAYS use fresh milk. Only use leftover milk for "hot milk on the side" requests.</p>
+            </div>
+        </section>
+
+        <section class="section" style="animation-delay: 0.6s;">
+            <h2>The Complete Coffee Menu</h2>
+            <p>Click on any coffee image area to upload your own images!</p>
+            <div class="instructions">
+                <p><strong>Note:</strong> All measurements and instructions may vary based on different coffee grinds, blends, machines and pressure levels.</p>
+            </div>
+            
+            <div class="coffee-gallery">
+                <div class="coffee-card" data-coffee="latte">
+                    <div class="coffee-type-badge">Latte</div>
+                    <div class="coffee-img" id="latte-img"></div>
+                    <div class="coffee-content">
+                        <h3>Latte</h3>
+                        <div class="coffee-details">
+                            <p><strong>Glass:</strong> Pre-heated with hot water</p>
+                            <p><strong>Shots:</strong> 1½ or 2 shots for tall glass</p>
+                            <p><strong>Milk:</strong> Creamy, hot (70-80°C)</p>
+                            <p><strong>Method:</strong> Pour into middle, don't disturb crema. Fill to 70%, allow foam to form, then continue with thin milk to top.</p>
+                            <p><strong>Finish:</strong> 1-2cm foam from top, crema covering top, white circle in middle for design.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="cappuccino">
+                    <div class="coffee-type-badge">Cappuccino</div>
+                    <div class="coffee-img" id="cappuccino-img"></div>
+                    <div class="coffee-content">
+                        <h3>Cappuccino</h3>
+                        <div class="coffee-details">
+                            <p><strong>Cup:</strong> Ceramic, pre-heated</p>
+                            <p><strong>Shots:</strong> 1 shot</p>
+                            <p><strong>Milk:</strong> Hot and creamy (70-80°C)</p>
+                            <p><strong>Method:</strong> Pour in middle of crema creating white dot. Stop halfway, swirl milk, pour again into middle. Repeat until full.</p>
+                            <p><strong>Finish:</strong> Foam above rim, chocolate circle in middle surrounded by crema.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="flat-white">
+                    <div class="coffee-type-badge">Flat White</div>
+                    <div class="coffee-img" id="flat-white-img"></div>
+                    <div class="coffee-content">
+                        <h3>Flat White</h3>
+                        <div class="coffee-details">
+                            <p><strong>Cup:</strong> Ceramic, pre-heated</p>
+                            <p><strong>Shots:</strong> 1 shot</p>
+                            <p><strong>Milk:</strong> Hot and creamy (70-80°C)</p>
+                            <p><strong>Method:</strong> Pour without disturbing crema, slowly raise jug high, then bring low when halfway.</p>
+                            <p><strong>Finish:</strong> Stop 1cm before rim, allow foam to form, then fill to top. Leave white circle for design.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="espresso">
+                    <div class="coffee-type-badge">Espresso</div>
+                    <div class="coffee-img" id="espresso-img"></div>
+                    <div class="coffee-content">
+                        <h3>Espresso / Short Black</h3>
+                        <div class="coffee-details">
+                            <p><strong>Cup:</strong> Espresso cup, pre-heated</p>
+                            <p><strong>Shots:</strong> 1 shot</p>
+                            <p><strong>Method:</strong> Tip water out from side customer won't drink from (usually back if handle on right).</p>
+                            <p><strong>Extraction:</strong> Ensure coffee doesn't splash to preserve crema.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="long-black">
+                    <div class="coffee-type-badge">Long Black</div>
+                    <div class="coffee-img" id="long-black-img"></div>
+                    <div class="coffee-content">
+                        <h3>Long Espresso / Long Black / Americano / Regular</h3>
+                        <div class="coffee-details">
+                            <p><strong>Cup:</strong> Ceramic, pre-heated</p>
+                            <p><strong>Shots:</strong> DOUBLE (2 shots)</p>
+                            <p><strong>Method:</strong> Tip water out, refill to 60-70% with hot water, begin extraction INTO THE TOP of hot water.</p>
+                            <p><strong>Important:</strong> Coffee must go in on top of water for smoother flavor and crema formation. Reverse order burns coffee and destroys crema.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="macciato">
+                    <div class="coffee-type-badge">Macciato</div>
+                    <div class="coffee-img" id="macciato-img"></div>
+                    <div class="coffee-content">
+                        <h3>Short Macciato</h3>
+                        <div class="coffee-details">
+                            <p><strong>Meaning:</strong> "Stain" in Italian - strong black coffee with a dash of milk</p>
+                            <p><strong>Method:</strong> Follow espresso procedure, then add 2 teaspoons of thin milk and a dollop of creamy foam in middle of crema.</p>
+                            <p><strong>Long Macciato:</strong> Follow Long Espresso procedure, add 2 tablespoons of thin milk and spoon of creamy foam.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="ristretto">
+                    <div class="coffee-type-badge">Ristretto</div>
+                    <div class="coffee-img" id="ristretto-img"></div>
+                    <div class="coffee-content">
+                        <h3>Ristretto</h3>
+                        <div class="coffee-details">
+                            <p><strong>Meaning:</strong> "Restriction" in Italian - half of a short espresso</p>
+                            <p><strong>Method:</strong> Follow espresso procedure but stop shot when it reaches halfway.</p>
+                            <p><strong>Character:</strong> Extra strong shot using the most potent first drops of extraction.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="piccolo">
+                    <div class="coffee-type-badge">Piccolo</div>
+                    <div class="coffee-img" id="piccolo-img"></div>
+                    <div class="coffee-content">
+                        <h3>Piccolo</h3>
+                        <div class="coffee-details">
+                            <p><strong>Description:</strong> A mini-latte for an extra strong hit</p>
+                            <p><strong>Method:</strong> Follow Ristretto procedure, then pour hot, creamy milk into espresso cup bringing crema to top.</p>
+                            <p><strong>Finish:</strong> Leave white circle in middle for design presentation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="mocha">
+                    <div class="coffee-type-badge">Mocha</div>
+                    <div class="coffee-img" id="mocha-img"></div>
+                    <div class="coffee-content">
+                        <h3>Mocha</h3>
+                        <div class="coffee-details">
+                            <p><strong>Glass:</strong> Latte glass, pre-heated</p>
+                            <p><strong>Ingredients:</strong> 1 heaped teaspoon chocolate powder + 1 shot espresso</p>
+                            <p><strong>Milk:</strong> Creamed until hot (like latte)</p>
+                            <p><strong>Method:</strong> Pour milk bringing crema up, stop at 70-75%, stir in chocolate while waiting for separation.</p>
+                            <p><strong>Finish:</strong> Continue pouring, foam above rim. Create thick chocolate circle on foam.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="vienna">
+                    <div class="coffee-type-badge">Vienna</div>
+                    <div class="coffee-img" id="vienna-img"></div>
+                    <div class="coffee-content">
+                        <h3>Vienna</h3>
+                        <div class="coffee-details">
+                            <p><strong>Glass:</strong> Latte glass, pre-heated</p>
+                            <p><strong>Shots:</strong> DOUBLE (2 shots)</p>
+                            <p><strong>Method:</strong> Extract double shot into glass, fill with hot water to 70-75% full.</p>
+                            <p><strong>Finish:</strong> Add 2½ swirls of whipped cream on top, light dusting of chocolate powder.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="affogato">
+                    <div class="coffee-type-badge">Affogato</div>
+                    <div class="coffee-img" id="affogato-img"></div>
+                    <div class="coffee-content">
+                        <h3>Affogato</h3>
+                        <div class="coffee-details">
+                            <p><strong>Vessel:</strong> Latte glass or coffee drinking bowl</p>
+                            <p><strong>Ingredients:</strong> 2 small scoops or 1 large scoop of ice cream + DOUBLE (2 shots) espresso</p>
+                            <p><strong>Method:</strong> Place ice cream in glass/bowl, extract espresso straight over ice cream.</p>
+                            <p><strong>Finish:</strong> Light dusting of chocolate powder.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coffee-card" data-coffee="hot-chocolate">
+                    <div class="coffee-type-badge">Hot Chocolate</div>
+                    <div class="coffee-img" id="hot-chocolate-img"></div>
+                    <div class="coffee-content">
+                        <h3>Hot Chocolate</h3>
+                        <div class="coffee-details">
+                            <p><strong>Glass:</strong> Latte glass, pre-heated</p>
+                            <p><strong>Ingredients:</strong> 1-2 heaped teaspoons chocolate powder + dash of chocolate sauce (if available)</p>
+                            <p><strong>Milk:</strong> Extra hot (at least 80°C) as chocolate powder cools it down</p>
+                            <p><strong>Method:</strong> Pour milk to 70-75%, stir in chocolate, continue pouring.</p>
+                            <p><strong>Finish:</strong> Like mocha or cappuccino, create perfect chocolate circle on foam.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="animation-delay: 0.7s;">
+            <h2>Important Coffee Facts</h2>
+            <div class="tip-box">
+                <p><strong>The First Drops Are the Strongest:</strong> The most potent part of a coffee shot is the first drops/drips that come out (espresso, ristretto, piccolo, short macciato). These are considered "fixes" or a "hit" - the most intense, strongest ways of drinking coffee.</p>
+            </div>
+            <div class="tip-box">
+                <p><strong>Dilution Softens Coffee:</strong> When coffee is left to run longer past 40-50ml, or has milk/water added, it becomes diluted, taking away intensity but softening the flavor.</p>
+            </div>
+            <div class="warning-box">
+                <p><strong>No Crema = No Flavor:</strong> Crema is essential for body and flavor. Streaks/stripes in crema indicate burnt/bitter coffee.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>Remember: This is a guide. Adjust for your grind, machine, and most importantly, your customer's happiness!</p>
+            <p>☕ Now Go Forth and Brew! ☕</p>
+            <div class="copyright">
+                Copyright - <a href="https://www.instagram.com/suraj.gg87/" target="_blank">https://www.instagram.com/suraj.gg87/</a>
+            </div>
+        </footer>
+    </div>
+
+    <input type="file" id="image-input" class="file-input" accept="image/*">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('image-input');
+            let currentImageContainer = null;
+
+            // Set up click event for all coffee image containers
+            const coffeeImages = document.querySelectorAll('.coffee-img');
+            
+            coffeeImages.forEach(container => {
+                container.addEventListener('click', function() {
+                    currentImageContainer = this;
+                    fileInput.click();
                 });
-                
-                return () => unsubscribe();
-            }, []);
-            
-            const login = async (username, password) => {
-                if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-                    const userData = { username, isAdmin: true };
-                    setUser(userData);
-                    localStorage.setItem('cocktailAppUser', JSON.stringify(userData));
-                    
-                    // Sign in to Firebase anonymously
-                    try {
-                        await auth.signInAnonymously();
-                    } catch (error) {
-                        console.error('Firebase auth error:', error);
-                    }
-                    
-                    return true;
-                }
-                return false;
-            };
-            
-            const loginAsGuest = async () => {
-                const guestUser = { username: 'Guest', isAdmin: false };
-                setUser(guestUser);
-                localStorage.setItem('cocktailAppUser', JSON.stringify(guestUser));
-                
-                // Sign in to Firebase anonymously
-                try {
-                    await auth.signInAnonymously();
-                } catch (error) {
-                    console.error('Firebase auth error:', error);
-                }
-                
-                return true;
-            };
-            
-            const logout = () => {
-                setUser(null);
-                localStorage.removeItem('cocktailAppUser');
-                auth.signOut();
-            };
-            
-            return { user, firebaseUser, login, loginAsGuest, logout };
-        }
 
-        // Hamburger Menu Component
-        function HamburgerMenu({ isOpen, onToggle, currentPage, onNavigate, isAdmin }) {
-            const menuRef = useRef(null);
-            
-            useEffect(() => {
-                const handleClickOutside = (event) => {
-                    if (menuRef.current && !menuRef.current.contains(event.target) && 
-                        !event.target.closest('.menu-button')) {
-                        onToggle(false);
-                    }
-                };
-                
-                if (isOpen) {
-                    document.addEventListener('mousedown', handleClickOutside);
-                    document.addEventListener('touchstart', handleClickOutside);
-                }
-                
-                return () => {
-                    document.removeEventListener('mousedown', handleClickOutside);
-                    document.removeEventListener('touchstart', handleClickOutside);
-                };
-            }, [isOpen, onToggle]);
-            
-            const handleNavigation = (page) => {
-                onNavigate(page);
-                onToggle(false);
-            };
-            
-            return (
-                <>
-                    <div className={`side-menu-overlay ${isOpen ? 'active' : ''}`} />
-                    <div ref={menuRef} className={`side-menu ${isOpen ? 'active' : ''}`}>
-                        <div className="side-menu-header">
-                            <div className="side-menu-logo">🍸</div>
-                            <div className="side-menu-title">Cocktail Manual</div>
-                        </div>
-                        
-                        <nav className="side-menu-nav">
-                            <button 
-                                className={`side-menu-button ${currentPage === 'home' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('home')}
-                            >
-                                📖 Cocktail Menu
-                            </button>
-                            
-                            <button 
-                                className={`side-menu-button ${currentPage === 'create-recipe' ? 'active' : ''} ${
-                                    !isAdmin ? 'disabled' : ''
-                                }`}
-                                onClick={() => isAdmin && handleNavigation('create-recipe')}
-                                title={!isAdmin ? 'Admin access required' : ''}
-                            >
-                                ➕ Add Recipe
-                            </button>
-                            
-                            <button 
-                                className={`side-menu-button ${currentPage === 'syrups' ? 'active' : ''}`}
-                                onClick={() => handleNavigation('syrups')}
-                            >
-                                🧪 Syrups & Infusions
-                            </button>
-                            
-                            <button 
-                                className={`side-menu-button ${currentPage === 'settings' ? 'active' : ''} ${
-                                    !isAdmin ? 'disabled' : ''
-                                }`}
-                                onClick={() => isAdmin && handleNavigation('settings')}
-                                title={!isAdmin ? 'Admin access required' : ''}
-                            >
-                                ⚙️ Settings
-                            </button>
-                        </nav>
-                    </div>
-                </>
-            );
-        }
-
-        // Recipe Card Component
-        function RecipeCard({ recipe, onClick, isAdmin }) {
-            const imageStyle = {
-                backgroundImage: recipe.image_url ? `url(${recipe.image_url})` : 'none',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-            };
-            
-            return (
-                <div className="recipe-card" onClick={() => onClick(recipe)}>
-                    <div className="recipe-image" style={imageStyle}>
-                        {!recipe.image_url && '🍸'}
-                    </div>
-                    <div className="recipe-info">
-                        <div className="recipe-name">{recipe.name}</div>
-                        <div className="recipe-spirit">{recipe.spirit_type}</div>
-                    </div>
-                </div>
-            );
-        }
-
-        // View Recipe Component
-        function ViewRecipePage({ recipe, onBack, onScale, isAdmin, onDeleteRecipe, onEditRecipe }) {
-            const backgroundStyle = {
-                backgroundImage: recipe.image_url ? `url(${recipe.image_url})` : 'none',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-            };
-            
-            return (
-                <div className="container">
-                    <button className="button button-secondary" onClick={onBack}>
-                        ← Back to Cocktails
-                    </button>
-                    
-                    <div className="recipe-view">
-                        {recipe.image_url && (
-                            <div className="recipe-background" style={backgroundStyle}></div>
-                        )}
-                        
-                        <div className="recipe-content">
-                            <div className="recipe-header">
-                                <div>
-                                    <h1 className="recipe-title">{recipe.name}</h1>
-                                    <div className="recipe-meta">
-                                        <div className="meta-item">{recipe.spirit_type}</div>
-                                        <div className="meta-item">{recipe.glass_type} Glass</div>
-                                        <div className="meta-item">{recipe.abv}% ABV</div>
-                                        <div className="meta-item">${recipe.pour_cost} Cost</div>
-                                        <div className="meta-item">{recipe.venue}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className="recipe-details">
-                                <div>
-                                    <h3 style={{color: '#FFB366', marginBottom: '1rem'}}>Ingredients</h3>
-                                    <ul className="ingredients-list">
-                                        {recipe.ingredients.map((ingredient, index) => (
-                                            <li key={index} className="ingredient-item">
-                                                <span>{ingredient.name}</span>
-                                                <span>{ingredient.amount} {ingredient.unit}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h3 style={{color: '#FFB366', marginBottom: '1rem'}}>Instructions</h3>
-                                    <div className="instructions">{recipe.instructions}</div>
-                                    
-                                    {recipe.notes && (
-                                        <>
-                                            <h3 style={{color: '#FFB366', marginBottom: '1rem', marginTop: '1.5rem'}}>Notes</h3>
-                                            <div className="instructions">{recipe.notes}</div>
-                                        </>
-                                    )}
-                                    
-                                    <div className="action-buttons">
-                                        <button className="action-button scale" onClick={onScale}>
-                                            ⚖️ Scale Recipe
-                                        </button>
-                                        {isAdmin && (
-                                            <>
-                                                <button 
-                                                    className="action-button edit"
-                                                    onClick={() => {
-                                                        if (onEditRecipe) {
-                                                            onEditRecipe(recipe);
-                                                        }
-                                                    }}
-                                                >
-                                                    ✏️ Edit
-                                                </button>
-                                                <button 
-                                                    className="action-button delete"
-                                                    onClick={() => onDeleteRecipe(recipe.id)}
-                                                >
-                                                    🗑️ Delete
-                                                </button>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        // Home Page Component
-        function HomePage({ onRecipeClick, onDeleteRecipe, isAdmin, onCreateRecipe, recipes, syncStatus }) {
-            const [searchTerm, setSearchTerm] = useState('');
-            const [filterSpirit, setFilterSpirit] = useState('All');
-            const [filterVenue, setFilterVenue] = useState('All');
-            const settings = getSettings();
-            
-            // Filter recipes based on search and filters
-            const filteredRecipes = recipes.filter(recipe => {
-                const matchesSearch = recipe.name.toLowerCase().includes(searchTerm.toLowerCase());
-                const matchesSpirit = filterSpirit === 'All' || recipe.spirit_type === filterSpirit;
-                const matchesVenue = filterVenue === 'All' || recipe.venue === filterVenue;
-                
-                return matchesSearch && matchesSpirit && matchesVenue;
-            });
-            
-            // Group recipes by first letter
-            const groupedRecipes = filteredRecipes.reduce((groups, recipe) => {
-                const firstLetter = recipe.name.charAt(0).toUpperCase();
-                if (!groups[firstLetter]) {
-                    groups[firstLetter] = [];
-                }
-                groups[firstLetter].push(recipe);
-                return groups;
-            }, {});
-            
-            // Sort the groups alphabetically
-            const sortedLetters = Object.keys(groupedRecipes).sort();
-            
-            return (
-                <div className="container">
-                    <div className="page-header">
-                        <h1 className="page-title">Cocktail Menu</h1>
-                        {isAdmin && (
-                            <button className="button" onClick={onCreateRecipe}>
-                                + Add Recipe
-                            </button>
-                        )}
-                    </div>
-                    
-                    <div className="search-section">
-                        <input 
-                            type="text"
-                            className="search-box"
-                            placeholder="Search cocktails..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                        
-                        <div className="filters">
-                            <select 
-                                className="filter-select"
-                                value={filterSpirit}
-                                onChange={(e) => setFilterSpirit(e.target.value)}
-                            >
-                                <option value="All">All Spirits</option>
-                                {settings.spirit_types.map(spirit => (
-                                    <option key={spirit} value={spirit}>{spirit}</option>
-                                ))}
-                            </select>
-                            
-                            <select 
-                                className="filter-select"
-                                value={filterVenue}
-                                onChange={(e) => setFilterVenue(e.target.value)}
-                            >
-                                <option value="All">All Venues</option>
-                                {settings.venues.map(venue => (
-                                    <option key={venue} value={venue}>{venue}</option>
-                                ))}
-                            </select>
-                        </div>
-                        
-                        <div className="sync-status">
-                            <div className={`sync-indicator ${syncStatus === 'synced' ? 'synced' : syncStatus === 'syncing' ? 'syncing' : ''}`}></div>
-                            <span>
-                                {syncStatus === 'synced' ? 'Synced with cloud' : 
-                                 syncStatus === 'syncing' ? 'Syncing...' : 
-                                 syncStatus === 'error' ? 'Sync error' : 'Offline'}
-                            </span>
-                        </div>
-                    </div>
-                    
-                    {filteredRecipes.length === 0 ? (
-                        <div className="loading">
-                            {recipes.length === 0 ? (
-                                'No cocktails available. Login as admin to add recipes.'
-                            ) : (
-                                'No cocktails found matching your criteria.'
-                            )}
-                        </div>
-                    ) : (
-                        <>
-                            <div style={{marginBottom: '1rem', color: '#888', fontSize: '0.9rem'}}>
-                                Showing {filteredRecipes.length} of {recipes.length} cocktails
-                            </div>
-                            {sortedLetters.map(letter => (
-                                <div key={letter} className="alphabet-section">
-                                    <h2 className="letter-header">{letter}</h2>
-                                    <div className="recipes-grid">
-                                        {groupedRecipes[letter].map(recipe => (
-                                            <RecipeCard 
-                                                key={recipe.id}
-                                                recipe={recipe}
-                                                onClick={onRecipeClick}
-                                                isAdmin={isAdmin}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </>
-                    )}
-                </div>
-            );
-        }
-
-        // Create/Edit Recipe Component
-        function CreateEditRecipePage({ recipe, onBack, onSave, isEdit = false }) {
-            const [formData, setFormData] = useState(
-                recipe || {
-                    name: '',
-                    spirit_type: '',
-                    venue: '',
-                    glass_type: '',
-                    abv: '',
-                    pour_cost: '',
-                    image_url: '',
-                    ingredients: [{ name: '', amount: '', unit: 'ml' }],
-                    instructions: '',
-                    notes: ''
-                }
-            );
-            
-            const [imagePreview, setImagePreview] = useState(recipe?.image_url || '');
-            const settings = getSettings();
-            
-            const handleInputChange = (e) => {
-                const { name, value } = e.target;
-                setFormData(prev => ({
-                    ...prev,
-                    [name]: value
-                }));
-            };
-            
-            const handleIngredientChange = (index, field, value) => {
-                const updatedIngredients = [...formData.ingredients];
-                updatedIngredients[index][field] = value;
-                setFormData(prev => ({
-                    ...prev,
-                    ingredients: updatedIngredients
-                }));
-            };
-            
-            const addIngredient = () => {
-                setFormData(prev => ({
-                    ...prev,
-                    ingredients: [...prev.ingredients, { name: '', amount: '', unit: 'ml' }]
-                }));
-            };
-            
-            const removeIngredient = (index) => {
-                if (formData.ingredients.length > 1) {
-                    const updatedIngredients = [...formData.ingredients];
-                    updatedIngredients.splice(index, 1);
-                    setFormData(prev => ({
-                        ...prev,
-                        ingredients: updatedIngredients
-                    }));
-                }
-            };
-            
-            const handleImageUpload = async (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    try {
-                        const base64 = await convertImageToBase64(file);
-                        setFormData(prev => ({
-                            ...prev,
-                            image_url: base64
-                        }));
-                        setImagePreview(base64);
-                    } catch (error) {
-                        console.error('Error uploading image:', error);
-                        alert('Error uploading image. Please try again.');
-                    }
-                }
-            };
-            
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                
-                // Basic validation - only require name
-                if (!formData.name) {
-                    alert('Please at least enter a cocktail name');
-                    return;
-                }
-                
-                // Create new recipe or update existing
-                const recipeData = {
-                    ...formData,
-                    id: isEdit ? formData.id : Date.now().toString(),
-                    abv: parseFloat(formData.abv) || 0,
-                    pour_cost: parseFloat(formData.pour_cost) || 0,
-                    createdBy: isEdit ? formData.createdBy : 'user',
-                    createdAt: isEdit ? formData.createdAt : new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                
-                onSave(recipeData);
-            };
-            
-            return (
-                <div className="container">
-                    <button className="button button-secondary" onClick={onBack}>
-                        ← Back to Cocktails
-                    </button>
-                    
-                    <h1 className="page-title">{isEdit ? 'Edit Cocktail' : 'Add New Cocktail'}</h1>
-                    
-                    <form className="form" onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label className="form-label">Cocktail Name *</label>
-                            <input
-                                type="text"
-                                className="form-input"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        
-                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                            <div className="form-group">
-                                <label className="form-label">Spirit Type</label>
-                                <select
-                                    className="form-input"
-                                    name="spirit_type"
-                                    value={formData.spirit_type}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="">Select Spirit</option>
-                                    {settings.spirit_types.map(spirit => (
-                                        <option key={spirit} value={spirit}>{spirit}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            
-                            <div className="form-group">
-                                <label className="form-label">Venue</label>
-                                <select
-                                    className="form-input"
-                                    name="venue"
-                                    value={formData.venue}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="">Select Venue</option>
-                                    {settings.venues.map(venue => (
-                                        <option key={venue} value={venue}>{venue}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                            <div className="form-group">
-                                <label className="form-label">Glass Type</label>
-                                <select
-                                    className="form-input"
-                                    name="glass_type"
-                                    value={formData.glass_type}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="">Select Glass</option>
-                                    {settings.glass_types.map(glass => (
-                                        <option key={glass} value={glass}>{glass}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            
-                            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                                <div className="form-group">
-                                    <label className="form-label">ABV (%)</label>
-                                    <input
-                                        type="number"
-                                        step="0.1"
-                                        className="form-input"
-                                        name="abv"
-                                        value={formData.abv}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                
-                                <div className="form-group">
-                                    <label className="form-label">Pour Cost ($)</label>
-                                    <input
-                                        type="number"
-                                        step="0.01"
-                                        className="form-input"
-                                        name="pour_cost"
-                                        value={formData.pour_cost}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="form-group">
-                            <label className="form-label">Cocktail Image</label>
-                            <div className="image-upload">
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    style={{display: 'none'}}
-                                    id="image-upload"
-                                />
-                                <label htmlFor="image-upload" style={{cursor: 'pointer'}}>
-                                    {imagePreview ? 'Change Image' : 'Upload Image'}
-                                </label>
-                                {imagePreview && (
-                                    <img src={imagePreview} alt="Preview" className="image-preview" />
-                                )}
-                            </div>
-                        </div>
-                        
-                        <div className="form-group">
-                            <label className="form-label">Ingredients</label>
-                            {formData.ingredients.map((ingredient, index) => (
-                                <div key={index} style={{display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center'}}>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="Ingredient name"
-                                        value={ingredient.name}
-                                        onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
-                                        style={{flex: 2}}
-                                    />
-                                    <input
-                                        type="number"
-                                        step="0.1"
-                                        className="form-input"
-                                        placeholder="Amount"
-                                        value={ingredient.amount}
-                                        onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
-                                        style={{flex: 1}}
-                                    />
-                                    <select
-                                        className="form-input"
-                                        value={ingredient.unit}
-                                        onChange={(e) => handleIngredientChange(index, 'unit', e.target.value)}
-                                        style={{flex: 1}}
-                                    >
-                                        <option value="ml">ml</option>
-                                        <option value="oz">oz</option>
-                                        <option value="dash">dash</option>
-                                        <option value="piece">piece</option>
-                                        <option value="slice">slice</option>
-                                        <option value="sprig">sprig</option>
-                                    </select>
-                                    {formData.ingredients.length > 1 && (
-                                        <button
-                                            type="button"
-                                            className="icon-button delete"
-                                            onClick={() => removeIngredient(index)}
-                                        >
-                                            ×
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
-                            <button type="button" className="button button-secondary" onClick={addIngredient}>
-                                + Add Ingredient
-                            </button>
-                        </div>
-                        
-                        <div className="form-group">
-                            <label className="form-label">Instructions</label>
-                            <textarea
-                                className="form-textarea"
-                                name="instructions"
-                                value={formData.instructions}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        
-                        <div className="form-group">
-                            <label className="form-label">Notes</label>
-                            <textarea
-                                className="form-textarea"
-                                name="notes"
-                                value={formData.notes}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        
-                        <div className="buttons-row">
-                            <button type="submit" className="button">
-                                {isEdit ? 'Update Cocktail' : 'Save Cocktail'}
-                            </button>
-                            <button type="button" className="button button-secondary" onClick={onBack}>
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            );
-        }
-
-        // Settings Page Component
-        function SettingsPage({ onBack, isAdmin }) {
-            const [settings, setSettings] = useState(getSettings());
-            const [newItems, setNewItems] = useState({
-                spirit_types: '',
-                glass_types: '',
-                venues: ''
-            });
-            
-            // Handle Enter key press in input fields
-            const handleKeyPress = (e, type) => {
-                if (e.key === 'Enter') {
+                // Drag and drop functionality
+                container.addEventListener('dragover', function(e) {
                     e.preventDefault();
-                    handleAddItem(type);
-                }
-            };
-            
-            // Save settings whenever they change
-            useEffect(() => {
-                saveSettings(settings);
-            }, [settings]);
-            
-            const handleAddItem = (type) => {
-                const value = newItems[type].trim();
-                if (!value) {
-                    alert('Please enter a value');
-                    return;
-                }
-                
-                setSettings(prev => ({
-                    ...prev,
-                    [type]: [...prev[type], value]
-                }));
-                
-                setNewItems(prev => ({
-                    ...prev,
-                    [type]: ''
-                }));
-            };
-            
-            const handleRemoveItem = (type, index) => {
-                setSettings(prev => ({
-                    ...prev,
-                    [type]: prev[type].filter((_, i) => i !== index)
-                }));
-            };
-            
-            const handleReorderItems = (type, newItems) => {
-                setSettings(prev => ({
-                    ...prev,
-                    [type]: newItems
-                }));
-            };
-            
-            const handleInputChange = (type, value) => {
-                setNewItems(prev => ({
-                    ...prev,
-                    [type]: value
-                }));
-            };
-            
-            return (
-                <div className="container">
-                    <button className="button button-secondary" onClick={onBack}>
-                        ← Back to Cocktails
-                    </button>
-                    
-                    <h1 className="page-title">Settings</h1>
-                    
-                    {!isAdmin ? (
-                        <div className="settings-section">
-                            <p>Admin access required to modify settings.</p>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="settings-section">
-                                <h3 className="settings-title">Spirit Types</h3>
-                                <div style={{display: 'flex', gap: '0.5rem', marginBottom: '1rem'}}>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="Add new spirit type"
-                                        value={newItems.spirit_types}
-                                        onChange={(e) => handleInputChange('spirit_types', e.target.value)}
-                                        onKeyPress={(e) => handleKeyPress(e, 'spirit_types')}
-                                        style={{flex: 1}}
-                                    />
-                                    <button 
-                                        className="button" 
-                                        onClick={() => handleAddItem('spirit_types')}
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                                <ul className="settings-list">
-                                    {settings.spirit_types.map((item, index) => (
-                                        <li key={index} className="settings-item">
-                                            <span>{item}</span>
-                                            <div className="settings-actions">
-                                                <button 
-                                                    className="icon-button delete"
-                                                    onClick={() => handleRemoveItem('spirit_types', index)}
-                                                >
-                                                    ×
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            
-                            <div className="settings-section">
-                                <h3 className="settings-title">Glass Types</h3>
-                                <div style={{display: 'flex', gap: '0.5rem', marginBottom: '1rem'}}>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="Add new glass type"
-                                        value={newItems.glass_types}
-                                        onChange={(e) => handleInputChange('glass_types', e.target.value)}
-                                        onKeyPress={(e) => handleKeyPress(e, 'glass_types')}
-                                        style={{flex: 1}}
-                                    />
-                                    <button 
-                                        className="button" 
-                                        onClick={() => handleAddItem('glass_types')}
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                                <ul className="settings-list">
-                                    {settings.glass_types.map((item, index) => (
-                                        <li key={index} className="settings-item">
-                                            <span>{item}</span>
-                                            <div className="settings-actions">
-                                                <button 
-                                                    className="icon-button delete"
-                                                    onClick={() => handleRemoveItem('glass_types', index)}
-                                                >
-                                                    ×
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            
-                            <div className="settings-section">
-                                <h3 className="settings-title">Venues</h3>
-                                <div style={{display: 'flex', gap: '0.5rem', marginBottom: '1rem'}}>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="Add new venue"
-                                        value={newItems.venues}
-                                        onChange={(e) => handleInputChange('venues', e.target.value)}
-                                        onKeyPress={(e) => handleKeyPress(e, 'venues')}
-                                        style={{flex: 1}}
-                                    />
-                                    <button 
-                                        className="button" 
-                                        onClick={() => handleAddItem('venues')}
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                                <ul className="settings-list">
-                                    {settings.venues.map((item, index) => (
-                                        <li key={index} className="settings-item">
-                                            <span>{item}</span>
-                                            <div className="settings-actions">
-                                                <button 
-                                                    className="icon-button delete"
-                                                    onClick={() => handleRemoveItem('venues', index)}
-                                                >
-                                                    ×
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </>
-                    )}
-                </div>
-            );
-        }
+                    this.classList.add('drag-over');
+                });
 
-        // Login Page Component
-        function LoginPage({ onLogin, onGuestLogin }) {
-            const [username, setUsername] = useState('');
-            const [password, setPassword] = useState('');
-            const [error, setError] = useState('');
-            
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (onLogin(username, password)) {
-                    setError('');
-                } else {
-                    setError('Invalid credentials');
+                container.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+
+                container.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        handleImageUpload(files[0], this);
+                    }
+                });
+            });
+
+            // Handle file input change
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0 && currentImageContainer) {
+                    handleImageUpload(e.target.files[0], currentImageContainer);
+                    currentImageContainer = null;
                 }
-            };
-            
-            return (
-                <div className="container">
-                    <div className="form" style={{maxWidth: '400px', marginTop: '4rem'}}>
-                        <h1 className="page-title" style={{textAlign: 'center'}}>Cocktail Manual</h1>
+            });
+
+            function handleImageUpload(file, container) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        container.innerHTML = '';
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.alt = 'Coffee Image';
+                        container.appendChild(img);
+                        container.classList.add('has-image');
                         
-                        <form onSubmit={handleSubmit}>
-                            <div className="form-group">
-                                <label className="form-label">Username</label>
-                                <input 
-                                    type="text"
-                                    className="form-input"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            
-                            <div className="form-group">
-                                <label className="form-label">Password</label>
-                                <input 
-                                    type="password"
-                                    className="form-input"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            
-                            {error && (
-                                <div style={{color: '#ff6b6b', marginBottom: '1rem', textAlign: 'center'}}>
-                                    {error}
-                                </div>
-                            )}
-                            
-                            <div className="buttons-row">
-                                <button type="submit" className="button">
-                                    Login
-                                </button>
-                                <button 
-                                    type="button" 
-                                    className="button button-secondary"
-                                    onClick={onGuestLogin}
-                                >
-                                    Continue as Guest
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            );
-        }
-
-        // Main App Component
-        function App() {
-            const { user, firebaseUser, login, loginAsGuest, logout } = useAuth();
-            const [currentPage, setCurrentPage] = useState('home');
-            const [selectedRecipe, setSelectedRecipe] = useState(null);
-            const [menuOpen, setMenuOpen] = useState(false);
-            const [editingItem, setEditingItem] = useState(null);
-            const [isEditing, setIsEditing] = useState(false);
-            const [recipes, setRecipes] = useState(getRecipes());
-            const [syncStatus, setSyncStatus] = useState('offline'); // 'offline', 'syncing', 'synced', 'error'
-            
-            // Load recipes from Firebase when user logs in
-            useEffect(() => {
-                if (firebaseUser) {
-                    loadRecipesFromFirebase(firebaseUser.uid).then(firebaseRecipes => {
-                        if (firebaseRecipes && firebaseRecipes.length > 0) {
-                            // Merge Firebase recipes with local recipes
-                            const mergedRecipes = [...recipes];
-                            firebaseRecipes.forEach(fbRecipe => {
-                                const existingIndex = mergedRecipes.findIndex(r => r.id === fbRecipe.id);
-                                if (existingIndex !== -1) {
-                                    // Update existing recipe if Firebase version is newer
-                                    if (new Date(fbRecipe.updatedAt) > new Date(mergedRecipes[existingIndex].updatedAt)) {
-                                        mergedRecipes[existingIndex] = fbRecipe;
-                                    }
-                                } else {
-                                    // Add new recipe from Firebase
-                                    mergedRecipes.push(fbRecipe);
-                                }
-                            });
-                            
-                            setRecipes(mergedRecipes);
-                            saveRecipes(mergedRecipes);
-                            setSyncStatus('synced');
-                        }
-                    }).catch(error => {
-                        console.error('Error loading from Firebase:', error);
-                        setSyncStatus('error');
-                    });
-                }
-            }, [firebaseUser]);
-            
-            // Sync recipes to Firebase when they change
-            useEffect(() => {
-                if (firebaseUser && recipes.length > 0) {
-                    setSyncStatus('syncing');
-                    syncRecipesWithFirebase(firebaseUser.uid, recipes).then(success => {
-                        if (success) {
-                            setSyncStatus('synced');
-                        } else {
-                            setSyncStatus('error');
-                        }
-                    });
-                }
-            }, [recipes, firebaseUser]);
-            
-            const navigateTo = (page, item = null) => {
-                if ((page === 'create-recipe' || page === 'settings') && (!user || !user.isAdmin)) {
-                    return;
-                }
-                setCurrentPage(page);
-                if (page === 'view-recipe') setSelectedRecipe(item);
-                setMenuOpen(false);
-            };
-            
-            const handleDeleteRecipe = (recipeId) => {
-                if (!user || !user.isAdmin) return;
-                
-                if (confirm('Are you sure you want to delete this cocktail?')) {
-                    const updatedRecipes = recipes.filter(recipe => recipe.id !== recipeId);
-                    if (saveRecipes(updatedRecipes)) {
-                        setRecipes(updatedRecipes);
-                        alert('Recipe deleted successfully');
+                        // Save to localStorage
+                        const coffeeType = container.closest('.coffee-card').dataset.coffee;
+                        localStorage.setItem(`coffee-image-${coffeeType}`, e.target.result);
                     }
+                    
+                    reader.readAsDataURL(file);
                 }
-            };
-            
-            const handleSaveRecipe = (recipeData) => {
-                let updatedRecipes;
-                
-                if (isEditing && editingItem) {
-                    const index = recipes.findIndex(r => r.id === editingItem.id);
-                    if (index !== -1) {
-                        updatedRecipes = [...recipes];
-                        updatedRecipes[index] = recipeData;
-                    }
-                } else {
-                    updatedRecipes = [...recipes, recipeData];
-                }
-                
-                if (saveRecipes(updatedRecipes)) {
-                    setRecipes(updatedRecipes);
-                    setIsEditing(false);
-                    setEditingItem(null);
-                    navigateTo('home');
-                }
-            };
-            
-            const handleEditRecipe = (recipe) => {
-                setEditingItem(recipe);
-                setIsEditing(true);
-                setCurrentPage('create-recipe');
-            };
-            
-            const renderPage = () => {
-                if (!user) {
-                    return <LoginPage onLogin={login} onGuestLogin={loginAsGuest} />;
-                }
-                
-                switch(currentPage) {
-                    case 'home':
-                        return <HomePage 
-                            onRecipeClick={(recipe) => navigateTo('view-recipe', recipe)}
-                            onDeleteRecipe={handleDeleteRecipe}
-                            isAdmin={user.isAdmin}
-                            onCreateRecipe={() => {
-                                setIsEditing(false);
-                                setEditingItem(null);
-                                navigateTo('create-recipe');
-                            }}
-                            recipes={recipes}
-                            syncStatus={syncStatus}
-                        />;
-                    case 'view-recipe':
-                        return <ViewRecipePage 
-                            recipe={selectedRecipe} 
-                            onBack={() => navigateTo('home')}
-                            onScale={() => {/* Scale functionality would go here */}}
-                            isAdmin={user.isAdmin}
-                            onDeleteRecipe={handleDeleteRecipe}
-                            onEditRecipe={handleEditRecipe}
-                        />;
-                    case 'create-recipe':
-                        return <CreateEditRecipePage 
-                            recipe={editingItem}
-                            onBack={() => navigateTo('home')} 
-                            onSave={handleSaveRecipe}
-                            isEdit={isEditing}
-                        />;
-                    case 'settings':
-                        return <SettingsPage 
-                            onBack={() => navigateTo('home')} 
-                            isAdmin={user.isAdmin}
-                        />;
-                    default:
-                        return <HomePage 
-                            onRecipeClick={(recipe) => navigateTo('view-recipe', recipe)}
-                            onDeleteRecipe={handleDeleteRecipe}
-                            isAdmin={user.isAdmin}
-                            onCreateRecipe={() => navigateTo('create-recipe')}
-                            recipes={recipes}
-                            syncStatus={syncStatus}
-                        />;
-                }
-            };
-            
-            if (!user) {
-                return <LoginPage onLogin={login} onGuestLogin={loginAsGuest} />;
             }
-            
-            return (
-                <div className="app">
-                    <header className="header">
-                        <div className="header-left">
-                            <button 
-                                className={`menu-button ${menuOpen ? 'active' : ''}`}
-                                onClick={() => setMenuOpen(!menuOpen)}
-                                aria-label="Toggle menu"
-                            >
-                                <span className="menu-line"></span>
-                                <span className="menu-line"></span>
-                                <span className="menu-line"></span>
-                            </button>
-                        </div>
-                        
-                        <div className="nav-user">
-                            👤 {user.username}
-                            {user.isAdmin && <span style={{color: '#FFB366', fontSize: '0.7rem'}}> (Admin)</span>}
-                            {!user.isAdmin && <span style={{color: '#666', fontSize: '0.7rem'}}> (Guest)</span>}
-                            <button className="logout-btn" onClick={logout}>
-                                Logout
-                            </button>
-                        </div>
-                    </header>
-                    
-                    <HamburgerMenu 
-                        isOpen={menuOpen}
-                        onToggle={setMenuOpen}
-                        currentPage={currentPage}
-                        onNavigate={navigateTo}
-                        isAdmin={user.isAdmin}
-                    />
-                    
-                    <main>
-                        {renderPage()}
-                    </main>
 
-                    <footer className="footer">
-                        <p>
-                            Cocktail Manual © {new Date().getFullYear()} | Created by{' '}
-                            <a href="https://www.instagram.com/suraj.gg87/" target="_blank" rel="noopener noreferrer">
-                                @suraj.gg87
-                            </a>
-                        </p>
-                    </footer>
-                </div>
-            );
-        }
+            // Load saved images from localStorage on page load
+            function loadSavedImages() {
+                coffeeImages.forEach(container => {
+                    const coffeeType = container.closest('.coffee-card').dataset.coffee;
+                    const savedImage = localStorage.getItem(`coffee-image-${coffeeType}`);
+                    
+                    if (savedImage) {
+                        container.innerHTML = '';
+                        const img = document.createElement('img');
+                        img.src = savedImage;
+                        img.alt = 'Coffee Image';
+                        container.appendChild(img);
+                        container.classList.add('has-image');
+                    }
+                });
+            }
 
-        // Render the app
-        ReactDOM.render(<App />, document.getElementById('root'));
+            // Load saved images when page loads
+            loadSavedImages();
+        });
     </script>
 </body>
 </html>
