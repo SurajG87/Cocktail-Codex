@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Apple Touch Icon (the main one for home screen) -->
+<link rel="apple-touch-icon" href="logo.png">
+
+<!-- Optional: Prevents zooming when launching from home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BSR Barista Training</title>
@@ -344,8 +350,8 @@
         
         .youtube-video {
             width: 100%;
-            max-width: 560px;
-            height: 315px;
+            max-width: 500px;
+            height: 300px;
             border: 2px solid var(--brown);
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -552,44 +558,6 @@
             margin: 0 10px;
             vertical-align: middle;
         }
-        
-        /* Instagram link styling */
-        .instagram-link {
-            display: inline-block;
-            font-size: 1.5em;
-            margin: 0 5px;
-            transition: transform 0.3s;
-        }
-        
-        .instagram-link:hover {
-            transform: scale(1.2);
-        }
-        
-        .username {
-            font-size: 0.9em;
-            margin-left: 5px;
-            color: var(--light-blue);
-        }
-        
-        /* Video placeholder for when videos don't load */
-        .video-placeholder {
-            width: 100%;
-            max-width: 560px;
-            height: 315px;
-            background-color: var(--light-blue);
-            border: 2px solid var(--brown);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--brown);
-            margin: 0 auto;
-        }
-        
-        .video-placeholder p {
-            margin: 10px 0;
-        }
     </style>
 </head>
 <body>
@@ -597,9 +565,11 @@
         <header>
             <h1>BSR Barista Training <span class="sheep-emoji">🐑</span></h1>
             <p class="tagline">Welcome to your coffee journey!</p>
-            <p>This <strong>course</strong> will transform you into a qualified coffee artist. We'll blend theory, practical demos, and hands-on practice to master the craft of boutique coffee.</p>
+            <h2>Welcome, Apprentice Barista!</h2>
+            <p>This <strong> course</strong> will transform you into a qualified coffee artist. We'll blend theory, practical demos, and hands-on practice to master the craft of boutique coffee.</p>
         </header>
 
+        <!-- All existing sections remain the same -->
         <section class="section" style="animation-delay: 0.2s;">
             <h2>Coffee Lingo 101</h2>
             <p>Let's decode the language of the café. <strong>Double-tap</strong> any term to see a visual example.</p>
@@ -690,7 +660,7 @@
             <h2>Mastering Milk Textures</h2>
             
             <div class="video-container">
-                <iframe class="youtube-video" src="https://www.youtube.com/embed/0KxbdgZ9uqE?rel=0&modestbranding=1" title="Milk Texturing Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe class="youtube-video" src="https://www.youtube.com/embed/b2DRfAPB0QA?si=J9qGzLwUz6rJ3a5_" title="Milk Texturing Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 <p class="video-caption">Watch this demonstration of proper milk texturing techniques</p>
             </div>
             
@@ -723,7 +693,7 @@
             <h2>How to Make Latte Art</h2>
             
             <div class="video-container">
-                <iframe class="youtube-video" src="https://www.youtube.com/embed/zCKTcGyaUxE?rel=0&modestbranding=1" title="Latte Art Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe class="youtube-video" src="https://www.youtube.com/embed/w7WjYYX1DQk" title="Latte Art Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 <p class="video-caption">Learn the techniques for creating beautiful latte art designs</p>
             </div>
             
@@ -958,9 +928,10 @@
         </section>
 
         <footer>
+            <p>Remember: This is a guide. Adjust for your grind, machine, and most importantly, your customer's happiness!</p>
             <p>☕ Now Go Forth and Brew! ☕</p>
             <div class="copyright">
-                Copyright - <a href="https://www.instagram.com/suraj.gg87/" target="_blank" class="instagram-link">📷</a><span class="username">suraj.gg87</span>
+                Copyright - <a href="https://www.instagram.com/suraj.gg87/" target="_blank">https://www.instagram.com/suraj.gg87/</a>
             </div>
         </footer>
     </div>
@@ -1356,25 +1327,6 @@
             document.getElementById('quiz-retake').addEventListener('click', function() {
                 generateQuiz();
                 quizResults.classList.add('quiz-hidden');
-            });
-        });
-        
-        // YouTube video fallback
-        document.addEventListener('DOMContentLoaded', function() {
-            const videoIframes = document.querySelectorAll('.youtube-video');
-            
-            videoIframes.forEach(iframe => {
-                iframe.addEventListener('error', function() {
-                    const placeholder = document.createElement('div');
-                    placeholder.className = 'video-placeholder';
-                    placeholder.innerHTML = `
-                        <p>⚠️ Video unavailable</p>
-                        <p>Please check your internet connection</p>
-                        <p>or try refreshing the page</p>
-                    `;
-                    
-                    iframe.parentNode.replaceChild(placeholder, iframe);
-                });
             });
         });
     </script>
