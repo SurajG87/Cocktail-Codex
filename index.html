@@ -1,16 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Apple Touch Icon (the main one for home screen) -->
-<link rel="apple-touch-icon" href="logo.png">
-
-<!-- Optional: Prevents zooming when launching from home screen -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Art of the Brew | BSR Barista Training</title>
+    <title>BSR Barista Training</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -114,6 +107,7 @@
             border-radius: 8px;
             border-left: 5px solid var(--dark-pink);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .term-card:hover {
@@ -350,8 +344,8 @@
         
         .youtube-video {
             width: 100%;
-            max-width: 500px;
-            height: 300px;
+            max-width: 560px;
+            height: 315px;
             border: 2px solid var(--brown);
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -362,71 +356,303 @@
             font-style: italic;
             color: var(--brown);
         }
+        
+        /* NEW STYLES FOR IMAGE MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--brown);
+            background: none;
+            border: none;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 8px;
+        }
+        
+        .modal-title {
+            text-align: center;
+            margin-top: 10px;
+            color: var(--dark-pink);
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* NEW STYLES FOR QUIZ */
+        .quiz-container {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(168, 218, 220, 0.2);
+            border-radius: 10px;
+            border: 2px solid var(--brown);
+        }
+        
+        .quiz-toggle {
+            background-color: var(--dark-pink);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-toggle:hover {
+            background-color: var(--brown);
+            transform: translateY(-2px);
+        }
+        
+        .quiz-question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .quiz-question h4 {
+            margin-top: 0;
+            color: var(--brown);
+            border-bottom: 1px dashed var(--brown);
+            padding-bottom: 10px;
+        }
+        
+        .quiz-options {
+            margin-top: 15px;
+        }
+        
+        .quiz-option {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background: var(--light-blue);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quiz-option:hover {
+            background: var(--pink);
+        }
+        
+        .quiz-option.selected {
+            background: var(--olive-green);
+            color: white;
+        }
+        
+        .quiz-option.correct {
+            background: var(--olive-green);
+            color: white;
+        }
+        
+        .quiz-option.incorrect {
+            background: var(--dark-pink);
+            color: white;
+        }
+        
+        .quiz-submit {
+            background-color: var(--dark-green);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Playfair Display', serif;
+            margin-top: 20px;
+        }
+        
+        .quiz-submit:hover {
+            background-color: var(--olive-green);
+            transform: translateY(-2px);
+        }
+        
+        .quiz-results {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .quiz-score {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--dark-pink);
+            margin-bottom: 15px;
+        }
+        
+        .quiz-retake {
+            background-color: var(--brown);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .quiz-retake:hover {
+            background-color: var(--dark-pink);
+        }
+        
+        .quiz-hidden {
+            display: none;
+        }
+        
+        /* Sheep emoji styling */
+        .sheep-emoji {
+            font-size: 2em;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+        
+        /* Instagram link styling */
+        .instagram-link {
+            display: inline-block;
+            font-size: 1.5em;
+            margin: 0 5px;
+            transition: transform 0.3s;
+        }
+        
+        .instagram-link:hover {
+            transform: scale(1.2);
+        }
+        
+        .username {
+            font-size: 0.9em;
+            margin-left: 5px;
+            color: var(--light-blue);
+        }
+        
+        /* Video placeholder for when videos don't load */
+        .video-placeholder {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+            background-color: var(--light-blue);
+            border: 2px solid var(--brown);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--brown);
+            margin: 0 auto;
+        }
+        
+        .video-placeholder p {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🐑</h1>
-            <!-- CHANGED: Updated tagline to "BSR Barista Training Manual" -->
-            <p class="tagline">BSR Barista Training Manual</p>
-            <h2>Welcome, Apprentice Barista!</h2>
-            <p>This <strong> course</strong> will transform you into a qualified coffee artist. We'll blend theory, practical demos, and hands-on practice to master the craft of boutique coffee.</p>
+            <h1>BSR Barista Training <span class="sheep-emoji">🐑</span></h1>
+            <p class="tagline">Welcome to your coffee journey!</p>
+            <p>This <strong>course</strong> will transform you into a qualified coffee artist. We'll blend theory, practical demos, and hands-on practice to master the craft of boutique coffee.</p>
         </header>
 
         <section class="section" style="animation-delay: 0.2s;">
             <h2>Coffee Lingo 101</h2>
-            <p>Let's decode the language of the café.</p>
+            <p>Let's decode the language of the café. <strong>Double-tap</strong> any term to see a visual example.</p>
             <div class="term-grid">
-                <div class="term-card">
+                <div class="term-card" data-term="coffee-grind">
                     <h4>Coffee Grind</h4>
                     <p>The coffee powder used for brewing.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="espresso">
                     <h4>Espresso / Shot / Base</h4>
                     <p>A small amount of concentrated coffee used as the base for all coffee orders.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="crema">
                     <h4>Crema</h4>
                     <p>The thin, caramel-colored layer that forms on top of every shot of espresso. Also known as "coffee oil".</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="tamp">
                     <h4>Tamp</h4>
                     <p>To push the coffee down in the porta-filter, compacting it so it's level and even.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="tampa">
                     <h4>Tampa</h4>
                     <p>The little black or stainless steel instrument used to press down the coffee in the porta-filter.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="group-handle">
                     <h4>Group Handle (Coffee Gun)</h4>
                     <p>The instrument that holds the porta-filter, held when putting coffee in the machine.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="group-head">
                     <h4>Group Head</h4>
                     <p>The part of the machine the group handle fits into.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="element">
                     <h4>Element</h4>
                     <p>A hot screen/plate inside the group head that filters the coffee grind and turns it into liquid.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="porta-filter">
                     <h4>Porta-Filter</h4>
                     <p>A round silver cup that clips inside the group head.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="extraction">
                     <h4>Extraction</h4>
                     <p>The process that turns coffee grind into coffee liquid.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="steam-wand">
                     <h4>Steam Wand</h4>
                     <p>The long silver stem that comes out from the side of the machine, through which steam travels when heating milk.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="nozzle">
                     <h4>Nozzle</h4>
                     <p>The end tip on the steam wand with 3 or 4 holes where steam comes out.</p>
                 </div>
-                <div class="term-card">
+                <div class="term-card" data-term="dissipates">
                     <h4>Dissipates</h4>
                     <p>To disappear or fade away (referring to crema that doesn't form properly).</p>
                 </div>
@@ -463,9 +689,8 @@
         <section class="section" style="animation-delay: 0.5s;">
             <h2>Mastering Milk Textures</h2>
             
-            <!-- ADDED: YouTube Video Container -->
             <div class="video-container">
-                <iframe class="youtube-video" src="https://www.youtube.com/embed/b2DRfAPB0QA" title="Milk Texturing Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe class="youtube-video" src="https://www.youtube.com/embed/0KxbdgZ9uqE?rel=0&modestbranding=1" title="Milk Texturing Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 <p class="video-caption">Watch this demonstration of proper milk texturing techniques</p>
             </div>
             
@@ -494,6 +719,28 @@
             </div>
         </section>
 
+        <section class="section" style="animation-delay: 0.55s;">
+            <h2>How to Make Latte Art</h2>
+            
+            <div class="video-container">
+                <iframe class="youtube-video" src="https://www.youtube.com/embed/zCKTcGyaUxE?rel=0&modestbranding=1" title="Latte Art Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <p class="video-caption">Learn the techniques for creating beautiful latte art designs</p>
+            </div>
+            
+            <div class="milk-technique">
+                <h4>Basic Latte Art Techniques</h4>
+                <p><span class="step-badge">1</span> <strong>Perfect Milk Texture:</strong> Start with properly textured milk - silky and glossy with microfoam.</p>
+                <p><span class="step-badge">2</span> <strong>Proper Pouring Height:</strong> Begin pouring from a higher position to sink the milk beneath the crema.</p>
+                <p><span class="step-badge">3</span> <strong>Lower for Design:</strong> Bring the pitcher close to the surface when you're ready to create your design.</p>
+                <p><span class="step-badge">4</span> <strong>Control Flow:</strong> Maintain a steady, controlled pour to create consistent patterns.</p>
+                <p><span class="step-badge">5</span> <strong>Finish Clean:</strong> Lift the pitcher at the end and pull through to finish your design.</p>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>Pro Tip:</strong> Practice with water and a drop of dish soap first to get the pouring motion right without wasting milk!</p>
+            </div>
+        </section>
+
         <section class="section" style="animation-delay: 0.6s;">
             <h2>The Complete Coffee Menu</h2>
             <p>Explore our complete coffee offerings with visual examples.</p>
@@ -505,7 +752,7 @@
                 <!-- Coffee cards with manual images -->
                 <div class="coffee-card" data-coffee="latte">
                     <div class="coffee-type-badge">Latte</div>
-                    <div class="coffee-img" id="latte-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F0380b990-5b8f-4bd3-8e65-318851b912aa%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T203800Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3De69f23d7fb94ef23ee9e2851699c105535122c45f452c35ff40e95e88821302f&sign=uc8Ijj89jLk-ouCeBqt7PtRn9MaQ6ieIxKMc80PrPVM)"></div>
+                    <div class="coffee-img" id="latte-img" style="background-image: url('https://images.unsplash.com/photo-1561047029-3000c68339ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Latte</h3>
                         <div class="coffee-details">
@@ -520,7 +767,7 @@
 
                 <div class="coffee-card" data-coffee="cappuccino">
                     <div class="coffee-type-badge">Cappuccino</div>
-                    <div class="coffee-img" id="cappuccino-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F079998a4-c4f0-475d-8323-58bc054bb710%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T195438Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D7cc48abaf2c0cbebebdb02cc910da937bdc0b71b57b2b1b4cf0b2dd5d73f9a15&sign=0q6TW4fhpGWvYcxjX2NPNul9Cbbza6rXcuUwO64sW7g)"></div>
+                    <div class="coffee-img" id="cappuccino-img" style="background-image: url('https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Cappuccino</h3>
                         <div class="coffee-details">
@@ -535,7 +782,7 @@
 
                 <div class="coffee-card" data-coffee="flat-white">
                     <div class="coffee-type-badge">Flat White</div>
-                    <div class="coffee-img" id="flat-white-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F421bdf59-7a6e-49a2-8ab1-24bc39e83d3e%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T203638Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D551f886c1bad05e44cc92694c1b671132aaeb275210b29ac3a35793f91caca9a&sign=aBZn9xVbFZsqqHzhA18yYH7ekASwEX1UB5613DQJMng)"></div>
+                    <div class="coffee-img" id="flat-white-img" style="background-image: url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Flat White</h3>
                         <div class="coffee-details">
@@ -550,7 +797,7 @@
 
                 <div class="coffee-card" data-coffee="espresso">
                     <div class="coffee-type-badge">Espresso</div>
-                    <div class="coffee-img" id="espresso-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F7028bf79-a553-45d6-86bb-8358b7d05774%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T195851Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D01f0bf96ae0db75b5c2843a59ee91eec8666473222f96fdea4c44c69e64cdfa1&sign=3cvY9qol6hVbxEH3sJaVdqYLFxdJJCf63aCh-FC5ggg)"></div>
+                    <div class="coffee-img" id="espresso-img" style="background-image: url('https://images.unsplash.com/photo-1559056199-641a0ac8b55e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Espresso / Short Black</h3>
                         <div class="coffee-details">
@@ -564,7 +811,7 @@
 
                 <div class="coffee-card" data-coffee="long-black">
                     <div class="coffee-type-badge">Long Black</div>
-                    <div class="coffee-img" id="long-black-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F1119c8e2-4d09-442c-8280-cf5dcdce06c5%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T195941Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D45c2200ac15fdec3d7ca606196bf9088d382ba1a18f60ae145ad8309554b2ed1&sign=QyPVcrpTkRNolsx11o972TN4AswZzzJA95WeCqncAuw)"></div>
+                    <div class="coffee-img" id="long-black-img" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Long Espresso / Long Black / Americano / Regular</h3>
                         <div class="coffee-details">
@@ -578,7 +825,7 @@
 
                 <div class="coffee-card" data-coffee="macciato">
                     <div class="coffee-type-badge">Macciato</div>
-                    <div class="coffee-img" id="macciato-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2Fc286a9f2-34ca-44b7-9768-0ec588769bc2%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T203407Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3Dd49ec63306b9b78ab04ab190690355cdf289d1711552988bb759126f3d1eedac&sign=eKZdcWLiuF0P_-8AAzmuYnqGTduhquufUNJfqWBB_e4)"></div>
+                    <div class="coffee-img" id="macciato-img" style="background-image: url('https://images.unsplash.com/photo-1517701604599-bb29b565090c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Short Macciato</h3>
                         <div class="coffee-details">
@@ -591,7 +838,7 @@
 
                 <div class="coffee-card" data-coffee="ristretto">
                     <div class="coffee-type-badge">Ristretto</div>
-                    <div class="coffee-img" id="ristretto-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2Fc8e81019-5b90-4c10-bf4b-466d534bb9e1%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200319Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D14442b78bcc844dbd9f22c85c963d5d8a72f1cdc5a1b886d37fb3918060d98d7&sign=3BWoM22RL3bcQHbTpYewnXqhE1qvfX_yP8HcbqVZ0Po)"></div>
+                    <div class="coffee-img" id="ristretto-img" style="background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Ristretto</h3>
                         <div class="coffee-details">
@@ -604,7 +851,7 @@
 
                 <div class="coffee-card" data-coffee="piccolo">
                     <div class="coffee-type-badge">Piccolo</div>
-                    <div class="coffee-img" id="piccolo-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2Fcf9904dc-c0b5-4aba-ace6-f1a72cecf02b%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200359Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D373558bd95ae2ef902b1b8f58c85009cf0791691af0e6ad11c01ce61149c3db1&sign=k6cr5Qk3vbLTO8XG_bYmQP5EyXpdgNOfW8gprKo1F_s)"></div>
+                    <div class="coffee-img" id="piccolo-img" style="background-image: url('https://images.unsplash.com/photo-1517701604599-bb29b565090c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Piccolo</h3>
                         <div class="coffee-details">
@@ -617,7 +864,7 @@
 
                 <div class="coffee-card" data-coffee="mocha">
                     <div class="coffee-type-badge">Mocha</div>
-                    <div class="coffee-img" id="mocha-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F8f081a9c-34d2-422c-91dd-ffbb34c8daf6%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200832Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D50deda076ba5761764bcc828e9dacf2fb29db775150ecf57a7261ebc7744e9b7&sign=yaApzq0xZwEOPqAGpeBK_e_p92scK5QKVEx_ZDzsD6E)"></div>
+                    <div class="coffee-img" id="mocha-img" style="background-image: url('https://images.unsplash.com/photo-1571923984692-13a8b5615a75?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Mocha</h3>
                         <div class="coffee-details">
@@ -646,7 +893,7 @@
 
                 <div class="coffee-card" data-coffee="affogato">
                     <div class="coffee-type-badge">Affogato</div>
-                    <div class="coffee-img" id="affogato-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F92dc1b39-c47e-4e12-ad61-5c2aca865575%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T200518Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D54200da2f802dbbddeb4a2718cfa204f8bc83d328239dd7f59370825ccca219e&sign=2o6qNQm8k-ha-0P3zRcSBj5oTZipeUzSIBWpz6dmpM8)"></div>
+                    <div class="coffee-img" id="affogato-img" style="background-image: url('https://images.unsplash.com/photo-1561047029-3000c68339ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Affogato</h3>
                         <div class="coffee-details">
@@ -660,7 +907,7 @@
 
                 <div class="coffee-card" data-coffee="hot-chocolate">
                     <div class="coffee-type-badge">Hot Chocolate</div>
-                    <div class="coffee-img" id="hot-chocolate-img" style="background-image: url(https://vui.unsplash.com/resize?height=256&quality=60&type=auto&url=https%3A%2F%2Fsearched-images.s3.us-west-2.amazonaws.com%2F29769a33-36b0-4bdf-9a0a-4456c616754e%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQ4GRIA4QQ7L7GEOH%252F20251101%252Fus-west-2%252Fs3%252Faws4_request%26X-Amz-Date%3D20251101T201051Z%26X-Amz-Expires%3D86400%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D54e33401130c19579f7ecb35a54a236f3e7f4bec47b2229f6372083dcd117567&sign=DEY869IJXS48rzhCkMFrTm1y6pZpq8eyXmjY1IFeMg8)"></div>
+                    <div class="coffee-img" id="hot-chocolate-img" style="background-image: url('https://images.unsplash.com/photo-1571923984692-13a8b5615a75?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80')"></div>
                     <div class="coffee-content">
                         <h3>Hot Chocolate</h3>
                         <div class="coffee-details">
@@ -688,13 +935,448 @@
             </div>
         </section>
 
+        <!-- NEW: Quiz Section -->
+        <section class="section" style="animation-delay: 0.8s;">
+            <h2>Test Your Barista Knowledge!</h2>
+            <p>Ready to test what you've learned? Take our fun coffee quiz to see how much you remember!</p>
+            
+            <div class="quiz-container">
+                <button class="quiz-toggle" id="quiz-toggle">Take the Quiz</button>
+                
+                <div class="quiz-hidden" id="quiz-content">
+                    <div id="quiz-questions">
+                        <!-- Questions will be dynamically generated here -->
+                    </div>
+                    
+                    <button class="quiz-submit" id="quiz-submit">Submit Answers</button>
+                    
+                    <div class="quiz-results quiz-hidden" id="quiz-results">
+                        <!-- Results will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <footer>
-            <p>Remember: This is a guide. Adjust for your grind, machine, and most importantly, your customer's happiness!</p>
             <p>☕ Now Go Forth and Brew! ☕</p>
             <div class="copyright">
-                Copyright - <a href="https://www.instagram.com/suraj.gg87/" target="_blank">https://www.instagram.com/suraj.gg87/</a>
+                Copyright - <a href="https://www.instagram.com/suraj.gg87/" target="_blank" class="instagram-link">📷</a><span class="username">suraj.gg87</span>
             </div>
         </footer>
     </div>
+
+    <!-- Image Modal for Coffee Lingo Terms -->
+    <div class="modal-overlay" id="image-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <img class="modal-image" id="modal-image" src="" alt="">
+            <h3 class="modal-title" id="modal-title"></h3>
+        </div>
+    </div>
+
+    <script>
+        // Image modal functionality
+        const modal = document.getElementById('image-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalTitle = document.getElementById('modal-title');
+        const modalClose = document.getElementById('modal-close');
+        
+        // Image sources for coffee terms
+        const termImages = {
+            'coffee-grind': 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'espresso': 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'crema': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'tamp': 'https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'tampa': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'group-handle': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'group-head': 'https://images.unsplash.com/photo-1498804103079-a6351b050096?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'element': 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'porta-filter': 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'extraction': 'https://images.unsplash.com/photo-1561047029-3000c68339ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'steam-wand': 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'nozzle': 'https://images.unsplash.com/photo-1571923984692-13a8b5615a75?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            'dissipates': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+        };
+        
+        // Term names for modal titles
+        const termNames = {
+            'coffee-grind': 'Coffee Grind',
+            'espresso': 'Espresso / Shot / Base',
+            'crema': 'Crema',
+            'tamp': 'Tamp',
+            'tampa': 'Tampa',
+            'group-handle': 'Group Handle (Coffee Gun)',
+            'group-head': 'Group Head',
+            'element': 'Element',
+            'porta-filter': 'Porta-Filter',
+            'extraction': 'Extraction',
+            'steam-wand': 'Steam Wand',
+            'nozzle': 'Nozzle',
+            'dissipates': 'Dissipates'
+        };
+        
+        // Double-tap functionality for term cards
+        const termCards = document.querySelectorAll('.term-card');
+        
+        termCards.forEach(card => {
+            let lastTap = 0;
+            
+            card.addEventListener('touchend', function(e) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                
+                if (tapLength < 500 && tapLength > 0) {
+                    // Double tap detected
+                    const term = this.getAttribute('data-term');
+                    showTermImage(term);
+                    e.preventDefault();
+                }
+                
+                lastTap = currentTime;
+            });
+            
+            // Also support double-click for desktop
+            card.addEventListener('dblclick', function() {
+                const term = this.getAttribute('data-term');
+                showTermImage(term);
+            });
+        });
+        
+        // Function to show term image in modal
+        function showTermImage(term) {
+            if (termImages[term]) {
+                modalImage.src = termImages[term];
+                modalTitle.textContent = termNames[term];
+                modal.classList.add('active');
+            }
+        }
+        
+        // Close modal functionality
+        modalClose.addEventListener('click', function() {
+            modal.classList.remove('active');
+        });
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
+        
+        // NEW: Quiz functionality
+        const quizToggle = document.getElementById('quiz-toggle');
+        const quizContent = document.getElementById('quiz-content');
+        const quizQuestions = document.getElementById('quiz-questions');
+        const quizSubmit = document.getElementById('quiz-submit');
+        const quizResults = document.getElementById('quiz-results');
+        
+        // Quiz questions database
+        const quizQuestionsDB = [
+            {
+                question: "What is the ideal extraction time for a perfect espresso shot?",
+                options: [
+                    "10-15 seconds",
+                    "25-30 seconds",
+                    "40-50 seconds",
+                    "60-70 seconds"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the thin, caramel-colored layer that forms on top of espresso called?",
+                options: [
+                    "Foam",
+                    "Crema",
+                    "Milk skin",
+                    "Coffee oil"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which coffee drink is known as 'stain' in Italian?",
+                options: [
+                    "Latte",
+                    "Cappuccino",
+                    "Macciato",
+                    "Ristretto"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the recommended temperature for steaming milk?",
+                options: [
+                    "40-50°C",
+                    "60-70°C",
+                    "70-80°C",
+                    "90-100°C"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which coffee drink uses a double shot as standard?",
+                options: [
+                    "Espresso",
+                    "Cappuccino",
+                    "Long Black",
+                    "Flat White"
+                ],
+                correct: 2
+            },
+            {
+                question: "What does 'ristretto' mean in Italian?",
+                options: [
+                    "Restriction",
+                    "Strong",
+                    "Small",
+                    "Quick"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which part of the coffee machine holds the porta-filter?",
+                options: [
+                    "Group Head",
+                    "Steam Wand",
+                    "Element",
+                    "Nozzle"
+                ],
+                correct: 0
+            },
+            {
+                question: "What should you do if crema dissipates in your espresso shot?",
+                options: [
+                    "Add more milk",
+                    "Serve it anyway",
+                    "Throw it away and make a fresh shot",
+                    "Add sugar to compensate"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which milk texture is recommended for the best coffee drinks?",
+                options: [
+                    "Fluffy/Frothy",
+                    "Stewed/Steamed",
+                    "Creamy like silk",
+                    "Boiled"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the key indicator of beautiful coffee?",
+                options: [
+                    "The color of the cup",
+                    "The amount of foam",
+                    "The crema",
+                    "The temperature"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which coffee drink includes chocolate powder as an ingredient?",
+                options: [
+                    "Latte",
+                    "Cappuccino",
+                    "Mocha",
+                    "Flat White"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the purpose of tamping coffee?",
+                options: [
+                    "To make it look pretty",
+                    "To compact it so it's level and even",
+                    "To remove bitterness",
+                    "To add flavor"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which coffee drink is described as a 'mini-latte for an extra strong hit'?",
+                options: [
+                    "Ristretto",
+                    "Piccolo",
+                    "Macciato",
+                    "Espresso"
+                ],
+                correct: 1
+            },
+            {
+                question: "What should you do immediately after placing coffee in the machine?",
+                options: [
+                    "Wait 10 seconds",
+                    "Press the required button immediately",
+                    "Clean the steam wand",
+                    "Prepare the milk"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which coffee drink is served with ice cream?",
+                options: [
+                    "Vienna",
+                    "Affogato",
+                    "Mocha",
+                    "Piccolo"
+                ],
+                correct: 1
+            }
+        ];
+        
+        let currentQuestions = [];
+        let userAnswers = [];
+        
+        // Toggle quiz visibility
+        quizToggle.addEventListener('click', function() {
+            if (quizContent.classList.contains('quiz-hidden')) {
+                // Show quiz and generate questions
+                quizContent.classList.remove('quiz-hidden');
+                quizToggle.textContent = 'Hide Quiz';
+                generateQuiz();
+            } else {
+                // Hide quiz
+                quizContent.classList.add('quiz-hidden');
+                quizToggle.textContent = 'Take the Quiz';
+                quizResults.classList.add('quiz-hidden');
+            }
+        });
+        
+        // Generate random quiz questions
+        function generateQuiz() {
+            // Reset user answers
+            userAnswers = [];
+            
+            // Clear previous questions
+            quizQuestions.innerHTML = '';
+            
+            // Select 5 random questions from the database
+            currentQuestions = [];
+            const shuffled = [...quizQuestionsDB].sort(() => 0.5 - Math.random());
+            currentQuestions = shuffled.slice(0, 5);
+            
+            // Generate HTML for each question
+            currentQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'quiz-question';
+                
+                const questionHTML = `
+                    <h4>Question ${index + 1}: ${q.question}</h4>
+                    <div class="quiz-options">
+                        ${q.options.map((option, optIndex) => `
+                            <div class="quiz-option" data-question="${index}" data-option="${optIndex}">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                questionDiv.innerHTML = questionHTML;
+                quizQuestions.appendChild(questionDiv);
+                
+                // Add event listeners to options
+                const options = questionDiv.querySelectorAll('.quiz-option');
+                options.forEach(option => {
+                    option.addEventListener('click', function() {
+                        const questionIndex = parseInt(this.getAttribute('data-question'));
+                        const optionIndex = parseInt(this.getAttribute('data-option'));
+                        
+                        // Clear previous selection for this question
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        
+                        // Select this option
+                        this.classList.add('selected');
+                        
+                        // Store user's answer
+                        userAnswers[questionIndex] = optionIndex;
+                    });
+                });
+            });
+            
+            // Reset results
+            quizResults.classList.add('quiz-hidden');
+        }
+        
+        // Submit quiz
+        quizSubmit.addEventListener('click', function() {
+            // Check if all questions are answered
+            if (userAnswers.length < currentQuestions.length) {
+                alert('Please answer all questions before submitting!');
+                return;
+            }
+            
+            // Calculate score and highlight correct answers
+            let score = 0;
+            currentQuestions.forEach((q, index) => {
+                const questionDiv = quizQuestions.children[index];
+                const options = questionDiv.querySelectorAll('.quiz-option');
+                
+                // Highlight correct answer
+                options[q.correct].classList.add('correct');
+                
+                // Check if user's answer is correct
+                if (userAnswers[index] === q.correct) {
+                    score++;
+                } else if (userAnswers[index] !== undefined) {
+                    // Highlight incorrect user selection
+                    options[userAnswers[index]].classList.add('incorrect');
+                }
+            });
+            
+            // Display results
+            const percentage = Math.round((score / currentQuestions.length) * 100);
+            let message = '';
+            
+            if (percentage >= 80) {
+                message = 'Excellent! You\'re a coffee expert!';
+            } else if (percentage >= 60) {
+                message = 'Good job! You know your coffee well.';
+            } else if (percentage >= 40) {
+                message = 'Not bad! You have some coffee knowledge.';
+            } else {
+                message = 'Keep studying! You\'ll get there with more practice.';
+            }
+            
+            quizResults.innerHTML = `
+                <h3>Quiz Results</h3>
+                <div class="quiz-score">${score} out of ${currentQuestions.length} (${percentage}%)</div>
+                <p>${message}</p>
+                <button class="quiz-retake" id="quiz-retake">Retake Quiz</button>
+            `;
+            
+            quizResults.classList.remove('quiz-hidden');
+            
+            // Add event listener to retake button
+            document.getElementById('quiz-retake').addEventListener('click', function() {
+                generateQuiz();
+                quizResults.classList.add('quiz-hidden');
+            });
+        });
+        
+        // YouTube video fallback
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoIframes = document.querySelectorAll('.youtube-video');
+            
+            videoIframes.forEach(iframe => {
+                iframe.addEventListener('error', function() {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'video-placeholder';
+                    placeholder.innerHTML = `
+                        <p>⚠️ Video unavailable</p>
+                        <p>Please check your internet connection</p>
+                        <p>or try refreshing the page</p>
+                    `;
+                    
+                    iframe.parentNode.replaceChild(placeholder, iframe);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
